@@ -1,72 +1,110 @@
-import { SERVER_URL } from "../consts";
+import { SERVER_URL } from '../consts';
 
-export const getReadOnlySignedUrl = async ({
-  userId,
-  fileId,
-}: {
-  userId: string;
-  fileId: string;
-}) => {
-  console.log(`${userId}/${fileId}.excalidraw`);
-  const res = await fetch(`${SERVER_URL}/api/v1/file/get`, {
-    credentials: "include",
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      path: `${userId}/${fileId}.excalidraw`,
-    }),
-  });
-  if (!res.ok) {
-    throw new Error("Failed to fetch signed URL");
-  }
+const STORAGE_ERRORS = ['StorageApiError'];
 
-  const data = await res.json();
-  console.log(data, "DATA");
-  //const fileRes = await fetch(url);
-  //if (!fileRes.ok) {
-  //  throw new Error("Failed to fetch file");
-  //}
+export const getReadOnlySignedUrl = async ({ fileId }: { fileId: string }) => {
+    const res = await fetch(`${SERVER_URL}/api/v1/file/get`, {
+        credentials: 'include',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            path: `${fileId}.excalidraw`,
+        }),
+    });
+    if (!res.ok) {
+        throw new Error('Failed to fetch signed URL');
+    }
 
-  //const blob = await fileRes.blob();
-  //const text = await blob.text();
-  //const json = JSON.parse(text);
-  //console.log(json, "JSON CONTNET");
-  return text; // or return json if it's structured data
+    const data = await res.json();
+    const signedUrl = data?.data?.signedUrl;
+    const fileRes = await fetch(signedUrl);
+    if (!fileRes.ok) {
+        throw new Error('Failed to fetch file');
+    }
+
+    const blob = await fileRes.blob();
+    const text = await blob.text();
+    return text;
 };
 
-export const uploadSignedUrl = async ({
-  userId,
-  fileId,
-  signedUrl,
+export const getFileTree = async (userID: string) => {
+    const res = await fetch(`${SERVER_URL}/api/v1/file/get_tree/${userID}`, {
+        credentials: 'include',
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await res.json();
+    return data;
+};
+
+export const updateFileTree = async (userID: string) => {
+    const sampleData = {
+        path: '/',
+        children: [
+            {
+                path: '/home',
+            },
+        ],
+    };
+    const res = await fetch(`${SERVER_URL}/api/v1/file/update_tree`, {
+        credentials: 'include',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            fileTree: sampleData,
+        }),
+    });
+    const data = await res.json();
+    return data;
+};
+
+export const getUploadSignedURL = async ({
+    fileId,
+    fileBlob,
 }: {
-  userId: string;
-  fileId: string;
-  signedUrl: string;
+    fileId: string;
+    fileBlob: Blob;
 }) => {
-  const res = await fetch(`${SERVER_URL}/api/file/post`, {
-    credentials: "include",
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      path: `${userId}/${fileId}.excalidraw`,
-      signedUrl,
-    }),
-  });
+    try {
+        // 1. Get the signed URL
+        const res = await fetch(`${SERVER_URL}/api/v1/file/post`, {
+            credentials: 'include',
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                path: `${fileId}.excalidraw`,
+            }),
+        });
 
-  if (!res.ok) {
-    throw new Error("Failed to upload file");
-  }
+        if (!res.ok) {
+            throw new Error(`Failed to fetch signed URL: ${res.statusText}`);
+        }
 
-  const { url } = await res.json();
+        const data = await res.json();
+        const { signedUrl, token, path } = data?.data || {};
+        if (data?.data?.status !== 400 && STORAGE_ERRORS.includes(data?.data?.name)) {
+            throw new Error(data?.data?.message);
+        }
+        if (!signedUrl || !token) {
+            throw new Error('Missing signed URL or token');
+        }
 
-  const fileRes = await fetch(url);
-  if (!fileRes.ok) {
-    throw new Error("Failed to upload file");
-  }
+        // 2. Upload the file using the signed URL
+        const uploadResponse = await fetch(signedUrl, {
+            method: 'PUT',
+            body: fileBlob,
+            headers: {
+                'Content-Type': fileBlob.type,
+                Authorization: `Bearer ${token}`, // Add token in Authorization header
+            },
+        });
 
-  const blob = await fileRes.blob();
-  const text = await blob.text();
-  const json = JSON.parse(text);
-  console.log(json, "JSON CONTNET");
-  return text; // or return json if it's structured data
+        if (!uploadResponse.ok) {
+            throw new Error(`Upload failed: ${uploadResponse.statusText}`);
+        }
+        return path;
+    } catch (error) {
+        console.error('Upload error:', error);
+        throw error;
+    }
 };

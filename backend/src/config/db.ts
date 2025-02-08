@@ -1,9 +1,9 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import { config } from "dotenv";
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import { config } from 'dotenv';
 
-config({ path: ".env" });
-const connectionString = process.env.DATABASE_URL || "";
+config({ path: '.env' });
+const connectionString = process.env.DATABASE_URL || '';
 
 // Disable prefetch as it is not supported for "Transaction" pool mode
 export const client = postgres(connectionString, { prepare: false });
