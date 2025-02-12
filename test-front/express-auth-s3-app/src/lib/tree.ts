@@ -37,7 +37,9 @@ function addNodeHelper(
 }
 
 export function updateNode(tree: FileTree, folderId: string, newProperties: Partial<FileNode>) {
-    if (!newProperties.id) return tree;
+    if (!newProperties.id) {
+        return tree;
+    }
 
     if (!folderId) {
         tree.recent = tree.recent.map((item) =>
@@ -106,11 +108,8 @@ function getParentNodeIdHelper(node: FileNode, searchNodeId: string): string | n
 }
 
 export function removeNode(tree: FileTree, nodeId: string): boolean {
-    console.log('is ocmming');
     if (tree.recent) {
         const isNodeInRecent = tree.recent.every((node) => node.id === nodeId);
-        console.log(isNodeInRecent, 'yepa');
-
         if (isNodeInRecent) {
             tree.recent = tree.recent.filter((node) => node.id !== nodeId);
             return true;
@@ -132,14 +131,13 @@ function removeNodeHelper(node: FileNode, targetContainerId: string, nodeId: str
     if (node.id === targetContainerId) {
         node.children = node.children.filter((childNode) => childNode.id !== nodeId);
         return true;
-    } else {
-        for (const childNode of node.children) {
-            if (removeNodeHelper(childNode, targetContainerId, nodeId)) {
-                return true;
-            }
-        }
-        return false;
     }
+    for (const childNode of node.children) {
+        if (removeNodeHelper(childNode, targetContainerId, nodeId)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 export function moveNode(
@@ -148,16 +146,12 @@ export function moveNode(
     destinationContainerId: string,
 ): boolean {
     const sourceNode = findeNode(tree, sourceNodeId);
-    console.log(sourceNode, 'SOURCE');
     if (!sourceNode) {
-        console.error('Source node not found');
         return false;
     }
 
     const removed = removeNode(tree, sourceNodeId);
-    console.log(tree.recent);
     if (!removed) {
-        console.error('Failed to remove the node from its original location');
         return false;
     }
 
@@ -167,14 +161,10 @@ export function moveNode(
 
 function findeNode(tree: FileTree, nodeId: string): FileNode | null {
     if (tree.recent) {
-        console.log(tree.recent, 'RECERNT');
-
         const res = tree.recent.filter((node) => {
-            console.log(node.id, nodeId);
             return node.id === nodeId;
         })?.[0];
 
-        console.log(res, 'response');
         if (res) {
             return res;
         }

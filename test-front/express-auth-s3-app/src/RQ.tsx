@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useAuthUser } from './hooks/useUser';
-import { getFileTree, getReadOnlySignedUrl, getUploadSignedURL, updateFileTree } from './lib/file';
-import UploadFile from './UploadFile';
+import {
+    getFileTree,
+    getReadOnlySignedUrl,
+    getUploadSignedURL as uploadToSignedURL,
+    updateFileTree,
+} from './lib/file';
+
 export const Rqx = () => {
     const { data } = useAuthUser();
     if (data?.user?.id) {
@@ -18,7 +23,7 @@ export const Rqx = () => {
                             type: 'application/json',
                         });
 
-                        const uploadUrl = getUploadSignedURL({
+                        const uploadUrl = uploadToSignedURL({
                             fileId: 'Two another new pointers',
                             fileBlob: jsonBlob,
                         });
@@ -32,7 +37,6 @@ export const Rqx = () => {
                 <button
                     onClick={async () => {
                         const res = await getFileTree(userID);
-                        console.log(res, 'reposop');
                     }}
                 >
                     get file tree
@@ -41,7 +45,6 @@ export const Rqx = () => {
                 <button
                     onClick={async () => {
                         const res = await updateFileTree(userID);
-                        console.log(res, 'updating file Tree with sample');
                     }}
                 >
                     upload sample data

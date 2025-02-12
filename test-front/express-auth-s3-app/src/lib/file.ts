@@ -81,6 +81,9 @@ export const getUploadSignedURL = async ({
         }
 
         const data = await res.json();
+        if (data?.data?.status === 400) {
+            throw Error(`Unable to create upload url, ${data}`);
+        }
         const { signedUrl, token, path } = data?.data || {};
         if (data?.data?.status !== 400 && STORAGE_ERRORS.includes(data?.data?.name)) {
             throw new Error(data?.data?.message);
