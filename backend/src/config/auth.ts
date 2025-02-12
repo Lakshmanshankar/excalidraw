@@ -8,7 +8,7 @@ export const authConfig = {
     providers: [Google],
     callbacks: {
         async redirect() {
-            return 'http://localhost:5173';
+            return 'http://localhost:3001';
         },
 
         async session({ session }: { session: Session }) {
