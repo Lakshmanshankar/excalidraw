@@ -50,7 +50,7 @@ export const createIcon = (
   );
 };
 
-const tablerIconProps: Opts = {
+const folderIconProps: Opts = {
   width: 24,
   height: 24,
   fill: "none",
@@ -80,7 +80,7 @@ export const PlusPromoIcon = createIcon(
     <path d="M19 12v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-7" />
     <path d="M7.5 8a2.5 2.5 0 0 1 0 -5a4.8 8 0 0 1 4.5 5a4.8 8 0 0 1 4.5 -5a2.5 2.5 0 0 1 0 5" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // tabler-icons: book
@@ -93,7 +93,7 @@ export const LibraryIcon = createIcon(
     <line x1="12" y1="6" x2="12" y2="19" />
     <line x1="21" y1="6" x2="21" y2="19" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // tabler-icons: plus
@@ -103,7 +103,7 @@ export const PlusIcon = createIcon(
     <line x1="12" y1="5" x2="12" y2="19" />
     <line x1="5" y1="12" x2="19" y2="12" />
   </svg>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // tabler-icons: dots-vertical
@@ -114,7 +114,7 @@ export const DotsIcon = createIcon(
     <circle cx="12" cy="19" r="1"></circle>
     <circle cx="12" cy="5" r="1"></circle>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // tabler-icons: pinned
@@ -125,7 +125,7 @@ export const PinIcon = createIcon(
     <line x1="12" y1="16" x2="12" y2="21"></line>
     <line x1="8" y1="4" x2="16" y2="4"></line>
   </svg>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // tabler-icons: lock-open (via Figma)
@@ -279,7 +279,7 @@ export const RectangleIcon = createIcon(
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
     <rect x="4" y="4" width="16" height="16" rx="2"></rect>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // tabler-icons: square-rotated
@@ -289,7 +289,7 @@ export const DiamondIcon = createIcon(
     <path d="M10.5 20.4l-6.9 -6.9c-.781 -.781 -.781 -2.219 0 -3l6.9 -6.9c.781 -.781 2.219 -.781 3 0l6.9 6.9c.781 .781 .781 2.219 0 3l-6.9 6.9c-.781 .781 -2.219 .781 -3 0z" />
   </g>,
 
-  tablerIconProps,
+  folderIconProps,
 );
 
 // tabler-icons: circle
@@ -299,7 +299,7 @@ export const EllipseIcon = createIcon(
     <circle cx="12" cy="12" r="9"></circle>
   </g>,
 
-  tablerIconProps,
+  folderIconProps,
 );
 
 // tabler-icons: arrow-narrow-right
@@ -310,7 +310,7 @@ export const ArrowIcon = createIcon(
     <line x1="15" y1="16" x2="19" y2="12" />
     <line x1="15" y1="8" x2="19" y2="12" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // custom?
@@ -326,7 +326,7 @@ export const PenModeIcon = createIcon(
     <path d="M16 7h4"></path>
     <path d="M18 19h-13a2 2 0 1 1 0 -4h4a2 2 0 1 0 0 -4h-3"></path>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // modified tabler-icons: pencil
@@ -352,7 +352,7 @@ export const TextIcon = createIcon(
     <line x1="10.2" y1="6.3" x2="16" y2="20" />
     <polyline points="5 20 11 4 13 4 20 20"></polyline>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // modified tabler-icons: photo
@@ -373,7 +373,7 @@ export const EraserIcon = createIcon(
     <path d="M19 20h-10.5l-4.21 -4.3a1 1 0 0 1 0 -1.41l10 -10a1 1 0 0 1 1.41 0l5 5a1 1 0 0 1 0 1.41l-9.2 9.3" />
     <path d="M18 13.3l-6.3 -6.3" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const ZoomInIcon = createIcon(
@@ -393,7 +393,7 @@ export const ZoomResetIcon = createIcon(
     <path d="M3.268 12.043a7.017 7.017 0 0 0 6.634 4.957a7.012 7.012 0 0 0 7.043 -6.131a7 7 0 0 0 -5.314 -7.672a7.021 7.021 0 0 0 -8.241 4.403" />
     <path d="M3 4v4h4" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const TrashIcon = createIcon(
@@ -446,9 +446,30 @@ export const HamburgerMenuIcon = createIcon(
     <line x1="4" y1="12" x2="20" y2="12"></line>
     <line x1="4" y1="18" x2="20" y2="18"></line>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
+export const FolderIcon = createIcon(
+  <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />,
+  folderIconProps,
+);
+
+export const FileIcon = createIcon(
+  <>
+    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+    <path d="M14 2v4a2 2 0 0 0 2 2h4" />{" "}
+  </>,
+  folderIconProps,
+);
+
+export const SignOutIcon = createIcon(
+  <>
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+    <polyline points="16 17 21 12 16 7" />
+    <line x1="21" x2="9" y1="12" y2="12" />
+  </>,
+  folderIconProps,
+);
 export const ExportIcon = createIcon(
   <path
     strokeWidth="1.25"
@@ -464,7 +485,7 @@ export const HelpIcon = createIcon(
     <line x1="12" y1="17" x2="12" y2="17.01"></line>
     <path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4"></path>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const HelpIconThin = createIcon(
@@ -474,7 +495,7 @@ export const HelpIconThin = createIcon(
     <line x1="12" y1="17" x2="12" y2="17.01"></line>
     <path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4"></path>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const ExternalLinkIcon = createIcon(
@@ -507,7 +528,7 @@ export const XBrandIcon = createIcon(
     <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
     <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const checkIcon = createIcon(
@@ -561,7 +582,7 @@ export const bucketFillIcon = createIcon(
     <path d="M13.737 9.737c2.299 -2.3 3.23 -5.095 2.081 -6.245c-1.15 -1.15 -3.945 -.217 -6.244 2.082c-2.3 2.299 -3.231 5.095 -2.082 6.244c1.15 1.15 3.946 .218 6.245 -2.081z" />
     <path d="M7.492 11.818c.362 .362 .768 .676 1.208 .934l6.895 4.047c1.078 .557 2.255 -.075 3.692 -1.512c1.437 -1.437 2.07 -2.614 1.512 -3.692c-.372 -.718 -1.72 -3.017 -4.047 -6.895a6.015 6.015 0 0 0 -.934 -1.208" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const ExportImageIcon = createIcon(
@@ -574,7 +595,7 @@ export const ExportImageIcon = createIcon(
     <path d="M19 16v6"></path>
     <path d="M22 19l-3 3l-3 -3"></path>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const exportToFileIcon = createIcon(
@@ -645,7 +666,7 @@ export const exportToPlus = createIcon(
     <path d="M12 14v-11" />
     <path d="M9 6l3 -3l3 3" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const shareWindows = createIcon(
@@ -694,19 +715,19 @@ const arrownNarrowUpJSX = (
   </g>
 );
 
-export const BringForwardIcon = createIcon(arrownNarrowUpJSX, tablerIconProps);
+export const BringForwardIcon = createIcon(arrownNarrowUpJSX, folderIconProps);
 
 export const SendBackwardIcon = createIcon(arrownNarrowUpJSX, {
-  ...tablerIconProps,
+  ...folderIconProps,
   style: {
     transform: "rotate(180deg)",
   },
 });
 
-export const BringToFrontIcon = createIcon(arrowBarToTopJSX, tablerIconProps);
+export const BringToFrontIcon = createIcon(arrowBarToTopJSX, folderIconProps);
 
 export const SendToBackIcon = createIcon(arrowBarToTopJSX, {
-  ...tablerIconProps,
+  ...folderIconProps,
   style: {
     transform: "rotate(180deg)",
   },
@@ -860,7 +881,7 @@ export const usersIcon = createIcon(
     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
     <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"></path>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // not mirrored because it's inspired by a playback control, which is always RTL
@@ -1132,7 +1153,7 @@ export const StrokeStyleDashedIcon = createIcon(
     <path d="M17 12h2" />
     <path d="M11 12h2" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // tabler-icons: line-dotted
@@ -1145,7 +1166,7 @@ export const StrokeStyleDottedIcon = createIcon(
     <path d="M16 12v.01" />
     <path d="M20 12v.01" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const SloppinessArchitectIcon = createIcon(
@@ -1212,7 +1233,7 @@ export const EdgeRoundIcon = createIcon(
     <line x1="16" y1="20" x2="16" y2="20.01" />
     <line x1="20" y1="20" x2="20" y2="20.01" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const ArrowheadNoneIcon = createIcon(
@@ -1221,7 +1242,7 @@ export const ArrowheadNoneIcon = createIcon(
     <path d="M3 9l6 6" />
     <path d="M3 15l6 -6" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const ArrowheadArrowIcon = React.memo(
@@ -1484,7 +1505,7 @@ export const fontSizeIcon = createIcon(
     <path d="M18 12v7" />
     <path d="M17 19h2" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const FontFamilyHeadingIcon = createIcon(
@@ -1505,7 +1526,7 @@ export const FontFamilyHeadingIcon = createIcon(
       <path d="M5 5h4" />
     </g>
   </>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const FontFamilyNormalIcon = createIcon(
@@ -1555,7 +1576,7 @@ export const TextAlignLeftIcon = createIcon(
     <line x1="4" y1="12" x2="12" y2="12" />
     <line x1="4" y1="16" x2="16" y2="16" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const TextAlignCenterIcon = createIcon(
@@ -1570,7 +1591,7 @@ export const TextAlignCenterIcon = createIcon(
     <line x1="8" y1="12" x2="16" y2="12" />
     <line x1="6" y1="16" x2="18" y2="16" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const TextAlignRightIcon = createIcon(
@@ -1585,7 +1606,7 @@ export const TextAlignRightIcon = createIcon(
     <line x1="10" y1="12" x2="20" y2="12" />
     <line x1="8" y1="16" x2="20" y2="16" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // tabler-icons: layout-align-top
@@ -1602,7 +1623,7 @@ export const TextAlignTopIcon = React.memo(({ theme }: { theme: Theme }) =>
       <line x1="4" y1="4" x2="20" y2="4" />
       <rect x="9" y="8" width="6" height="12" rx="2" />
     </g>,
-    tablerIconProps,
+    folderIconProps,
   ),
 );
 
@@ -1620,7 +1641,7 @@ export const TextAlignBottomIcon = React.memo(({ theme }: { theme: Theme }) =>
       <line x1="4" y1="20" x2="20" y2="20" />
       <rect x="9" y="4" width="6" height="12" rx="2"></rect>
     </g>,
-    tablerIconProps,
+    folderIconProps,
   ),
 );
 
@@ -1639,7 +1660,7 @@ export const TextAlignMiddleIcon = React.memo(({ theme }: { theme: Theme }) =>
       <line x1="15" y1="12" x2="20" y2="12" />
       <rect x="9" y="6" width="6" height="12" rx="2" />
     </g>,
-    tablerIconProps,
+    folderIconProps,
   ),
 );
 
@@ -1652,7 +1673,7 @@ export const angleIcon = createIcon(
     <path d="M17.715 8.671h.015" />
     <path d="M15.415 5.971h.015" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const publishIcon = createIcon(
@@ -1675,7 +1696,7 @@ export const handIcon = createIcon(
     <path d="M14 5.5a1.5 1.5 0 0 1 3 0v6.5"></path>
     <path d="M17 7.5a1.5 1.5 0 0 1 3 0v8.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7a69.74 69.74 0 0 1 -.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47"></path>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const downloadIcon = createIcon(
@@ -1685,7 +1706,7 @@ export const downloadIcon = createIcon(
     <path d="M7 11l5 5l5 -5"></path>
     <path d="M12 4l0 12"></path>
   </>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const copyIcon = createIcon(
@@ -1694,7 +1715,7 @@ export const copyIcon = createIcon(
     <path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"></path>
     <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
   </>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const cutIcon = createIcon(
@@ -1705,7 +1726,7 @@ export const cutIcon = createIcon(
     <path d="M9.15 14.85l8.85 -10.85" />
     <path d="M6 4l8.85 10.85" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const helpIcon = createIcon(
@@ -1715,7 +1736,7 @@ export const helpIcon = createIcon(
     <path d="M12 17l0 .01"></path>
     <path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4"></path>
   </>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const playerPlayIcon = createIcon(
@@ -1723,7 +1744,7 @@ export const playerPlayIcon = createIcon(
     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
     <path d="M7 4v16l13 -8z"></path>
   </>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const playerStopFilledIcon = createIcon(
@@ -1735,7 +1756,7 @@ export const playerStopFilledIcon = createIcon(
       fill="currentColor"
     ></path>
   </>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const tablerCheckIcon = createIcon(
@@ -1743,7 +1764,7 @@ export const tablerCheckIcon = createIcon(
     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
     <path d="M5 12l5 5l10 -10"></path>
   </>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const alertTriangleIcon = createIcon(
@@ -1753,7 +1774,7 @@ export const alertTriangleIcon = createIcon(
     <path d="M12 9v4" />
     <path d="M12 17h.01" />
   </>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const eyeDropperIcon = createIcon(
@@ -1762,7 +1783,7 @@ export const eyeDropperIcon = createIcon(
     <path d="M11 7l6 6"></path>
     <path d="M4 16l11.7 -11.7a1 1 0 0 1 1.4 0l2.6 2.6a1 1 0 0 1 0 1.4l-11.7 11.7h-4v-4z"></path>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const extraToolsIcon = createIcon(
@@ -1772,7 +1793,7 @@ export const extraToolsIcon = createIcon(
     <path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
     <path d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"></path>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const frameToolIcon = createIcon(
@@ -1783,7 +1804,7 @@ export const frameToolIcon = createIcon(
     <path d="M7 4l0 16"></path>
     <path d="M17 4l0 16"></path>
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const mermaidLogoIcon = createIcon(
@@ -1829,7 +1850,7 @@ export const MagicIcon = createIcon(
     <path d="M9 3a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2" />
     <path d="M19 13a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const MagicIconThin = createIcon(
@@ -1840,7 +1861,7 @@ export const MagicIconThin = createIcon(
     <path d="M9 3a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2" />
     <path d="M19 13a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const OpenAIIcon = createIcon(
@@ -1853,7 +1874,7 @@ export const OpenAIIcon = createIcon(
     <path d="M18.786 8.986a3.501 3.501 0 0 0 -4.446 -5.266l-4.34 2.534v6.946" />
     <path d="M18 16.302c1.391 .236 2.787 -.395 3.534 -1.689a3.474 3.474 0 0 0 -1.271 -4.745l-4.308 -2.514l-5.955 3.42" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const fullscreenIcon = createIcon(
@@ -1864,7 +1885,7 @@ export const fullscreenIcon = createIcon(
     <path d="M16 4h2a2 2 0 0 1 2 2v2" />
     <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const eyeIcon = createIcon(
@@ -1873,7 +1894,7 @@ export const eyeIcon = createIcon(
     <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
     <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const eyeClosedIcon = createIcon(
@@ -1883,7 +1904,7 @@ export const eyeClosedIcon = createIcon(
     <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
     <path d="M3 3l18 18" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const brainIcon = createIcon(
@@ -1896,7 +1917,7 @@ export const brainIcon = createIcon(
     <path d="M6.5 16a3.5 3.5 0 0 1 0 -7h.5" />
     <path d="M5 9.3v-2.8a3.5 3.5 0 0 1 7 0v10" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const brainIconThin = createIcon(
@@ -1909,7 +1930,7 @@ export const brainIconThin = createIcon(
     <path d="M6.5 16a3.5 3.5 0 0 1 0 -7h.5" />
     <path d="M5 9.3v-2.8a3.5 3.5 0 0 1 7 0v10" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const searchIcon = createIcon(
@@ -1918,7 +1939,7 @@ export const searchIcon = createIcon(
     <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
     <path d="M21 21l-6 -6" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const clockIcon = createIcon(
@@ -1928,7 +1949,7 @@ export const clockIcon = createIcon(
     <path d="M12 7v5l3 3" />
     <path d="M19 16l-2 3h4l-2 3" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const microphoneIcon = createIcon(
@@ -1939,7 +1960,7 @@ export const microphoneIcon = createIcon(
     <path d="M8 21l8 0" />
     <path d="M12 17l0 4" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const microphoneMutedIcon = createIcon(
@@ -1951,7 +1972,7 @@ export const microphoneMutedIcon = createIcon(
     <path d="M8 21l8 0" />
     <path d="M12 17l0 4" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const boltIcon = createIcon(
@@ -1959,7 +1980,7 @@ export const boltIcon = createIcon(
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
     <path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 export const selectAllIcon = createIcon(
   <g>
@@ -1982,7 +2003,7 @@ export const selectAllIcon = createIcon(
     <path d="M20 16v.01" />
     <path d="M20 20v.01" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const abacusIcon = createIcon(
@@ -2000,7 +2021,7 @@ export const abacusIcon = createIcon(
     <path d="M8 5v4" />
     <path d="M3 21h18" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const flipVertical = createIcon(
@@ -2010,7 +2031,7 @@ export const flipVertical = createIcon(
     <path d="M7 16l10 0l-10 5l0 -5" />
     <path d="M7 8l10 0l-10 -5l0 5" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const flipHorizontal = createIcon(
@@ -2020,7 +2041,7 @@ export const flipHorizontal = createIcon(
     <path d="M16 7l0 10l5 0l-5 -10" />
     <path d="M8 7l0 10l-5 0l5 -10" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const paintIcon = createIcon(
@@ -2030,7 +2051,7 @@ export const paintIcon = createIcon(
     <path d="M19 6h1a2 2 0 0 1 2 2a5 5 0 0 1 -5 5l-5 0v2" />
     <path d="M10 15m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const zoomAreaIcon = createIcon(
@@ -2044,7 +2065,7 @@ export const zoomAreaIcon = createIcon(
     <path d="M10 3h1" />
     <path d="M15 3h1a2 2 0 0 1 2 2v1" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const svgIcon = createIcon(
@@ -2056,7 +2077,7 @@ export const svgIcon = createIcon(
     <path d="M10 15l2 6l2 -6" />
     <path d="M20 15h-1a2 2 0 0 0 -2 2v2a2 2 0 0 0 2 2h1v-3" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const pngIcon = createIcon(
@@ -2068,7 +2089,7 @@ export const pngIcon = createIcon(
     <path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6" />
     <path d="M11 21v-6l3 6v-6" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const magnetIcon = createIcon(
@@ -2078,7 +2099,7 @@ export const magnetIcon = createIcon(
     <path d="M4 8l5 0" />
     <path d="M15 8l4 0" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const coffeeIcon = createIcon(
@@ -2090,7 +2111,7 @@ export const coffeeIcon = createIcon(
     <path d="M3 10h14v5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-5z" />
     <path d="M16.746 16.726a3 3 0 1 0 .252 -5.555" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const DeviceDesktopIcon = createIcon(
@@ -2098,7 +2119,7 @@ export const DeviceDesktopIcon = createIcon(
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
     <path d="M3 5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-16a1 1 0 0 1-1-1v-10zM7 20h10M9 16v4M15 16v4" />
   </g>,
-  { ...tablerIconProps, strokeWidth: 1.5 },
+  { ...folderIconProps, strokeWidth: 1.5 },
 );
 
 // login
@@ -2109,7 +2130,7 @@ export const loginIcon = createIcon(
     <path d="M21 12h-13l3 -3" />
     <path d="M11 15l-3 -3" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const youtubeIcon = createIcon(
@@ -2118,7 +2139,7 @@ export const youtubeIcon = createIcon(
     <path d="M2 8a4 4 0 0 1 4 -4h12a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-12a4 4 0 0 1 -4 -4v-8z" />
     <path d="M10 9l5 3l-5 3z" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const gridIcon = createIcon(
@@ -2131,7 +2152,7 @@ export const gridIcon = createIcon(
     <path d="M12 3v18" />
     <path d="M18 3v18" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const lineEditorIcon = createIcon(
@@ -2141,7 +2162,7 @@ export const lineEditorIcon = createIcon(
     <path d="M3 17m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" />
     <path d="M17 5c-6.627 0 -12 5.373 -12 12" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // arrow-up-right (modified)
@@ -2151,7 +2172,7 @@ export const sharpArrowIcon = createIcon(
     <path d="M6 18l12 -12" />
     <path d="M18 10v-4h-4" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // arrow-guide (modified)
@@ -2161,7 +2182,7 @@ export const elbowArrowIcon = createIcon(
     <path d="M4,19L10,19C11.097,19 12,18.097 12,17L12,9C12,7.903 12.903,7 14,7L21,7" />
     <path d="M18 4l3 3l-3 3" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 // arrow-ramp-right-2 (heavily modified)
@@ -2170,7 +2191,7 @@ export const roundArrowIcon = createIcon(
     <path d="M16,12L20,9L16,6" />
     <path d="M6 20c0 -6.075 4.925 -11 11 -11h3" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const collapseDownIcon = createIcon(
@@ -2178,7 +2199,7 @@ export const collapseDownIcon = createIcon(
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
     <path d="M6 9l6 6l6 -6" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const collapseUpIcon = createIcon(
@@ -2186,7 +2207,7 @@ export const collapseUpIcon = createIcon(
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
     <path d="M6 15l6 -6l6 6" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const upIcon = createIcon(
@@ -2194,7 +2215,7 @@ export const upIcon = createIcon(
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
     <path d="M6 15l6 -6l6 6" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const cropIcon = createIcon(
@@ -2203,7 +2224,7 @@ export const cropIcon = createIcon(
     <path d="M8 5v10a1 1 0 0 0 1 1h10" />
     <path d="M5 8h10a1 1 0 0 1 1 1v10" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );
 
 export const elementLinkIcon = createIcon(
@@ -2218,5 +2239,5 @@ export const elementLinkIcon = createIcon(
     <path d="M7 19l10 0" />
     <path d="M19 7l0 10" />
   </g>,
-  tablerIconProps,
+  folderIconProps,
 );

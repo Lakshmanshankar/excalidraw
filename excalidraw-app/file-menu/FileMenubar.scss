@@ -1,0 +1,41 @@
+@import "../../packages/excalidraw/css/variables.module.scss";
+
+
+.file-tree-container {
+  width: 230px;
+  min-height: 540px;
+  overflow-y: auto;
+  // border: 1px solid var(--sidebar-border-color);
+  box-shadow: var(--sidebar-shadow);
+  border-radius: 10px;
+
+  .dropdown-menu-container {
+    height: 540px;
+  }
+}
+
+.file-menu-recent {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  z-index: 999;
+  max-height: 150px;
+  overflow-y: scroll;
+}
+
+.file-menu-recent-heading {
+  margin: 5px 0px;
+  color: var(--color-primary);
+  font-size: 1.125rem;
+}
+
+.file-node-tile {
+  display: flex;
+  width: 95%;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 4px;
+  border: 1px solid var(--default-border-color);
+  background: var(--color-surface-high);
+  border-radius: 5px;
+}
