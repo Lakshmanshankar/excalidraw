@@ -27,7 +27,9 @@ export async function getReadonlySignedURL(path: string, expireInMinutes: number
 export async function createUploadSignedURL(path: string) {
     const { data, error } = await supabase.storage
         .from(BUCKET.EXCLALIDRAW)
-        .createSignedUploadUrl(path);
+        .createSignedUploadUrl(path, {
+            upsert: true,
+        });
 
     if (error) {
         console.error('Error creating upload presigned url', error);
