@@ -141,6 +141,10 @@
       "edit": "Edit line",
       "editArrow": "Edit arrow"
     },
+    "fileMenu":{
+      "recent":"Recent files",
+      "files":"Files"
+    },
     "elementLock": {
       "lock": "Lock",
       "unlock": "Unlock",

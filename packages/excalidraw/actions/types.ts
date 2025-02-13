@@ -81,6 +81,7 @@ export type ActionName =
   | "saveToActiveFile"
   | "saveFileToDisk"
   | "loadScene"
+  | "loadSceneFromJSON"
   | "duplicateSelection"
   | "deleteSelectedElements"
   | "changeViewBackgroundColor"

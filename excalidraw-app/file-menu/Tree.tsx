@@ -7,25 +7,27 @@ import { useAuthUser } from "./hooks/useAuth";
 import { useFile } from "./hooks/useFile";
 import { createFolder } from "./lib/file";
 import { type FileNode, type FileTree } from "./lib/file-tree-types";
+import { useI18n } from "../../packages/excalidraw/i18n";
+import Spinner from "../../packages/excalidraw/components/Spinner";
 
 export default function Tree() {
   const { data } = useAuthUser();
   const { fileTree, createExcalidrawFile } = useFile();
-
+  const { t } = useI18n();
   if (data && data.user) {
     return (
       <>
-        <div className="file-menu-recent">
-          <h1 className="file-menu-recent-heading">Recent</h1>
-          <div>
-            {fileTree?.recent?.map((item) => (
-              <FileNodeTile props={item} />
+        <div className="file-menu-recent-container">
+          <h1 className="file-menu-heading">{t("labels.fileMenu.recent")}</h1>
+          <div className="file-menu-recent">
+            {fileTree?.recent?.map((item, index) => (
+              <FileNodeTile key={index} node={item} />
             ))}
           </div>
         </div>
 
         <div style={{ display: "flex", gap: "5px", marginTop: "5px" }}>
-          <h1 className="file-menu-recent-heading">Files</h1>
+          <h1 className="file-menu-heading">{t("labels.fileMenu.files")}</h1>
           <div style={{ display: "flex", gap: "5px" }}>
             <Button
               onSelect={() =>
@@ -40,10 +42,7 @@ export default function Tree() {
             </Button>
             <Button
               onSelect={() => {
-                createExcalidrawFile(
-                  "spers.excalidraw",
-                  `{"type":"excalidraw"}`,
-                );
+                createExcalidrawFile("prefix.excalidraw", "");
               }}
             >
               {FileIcon}
@@ -56,13 +55,27 @@ export default function Tree() {
   return <></>;
 }
 
-function FileNodeTile({ props }: { props: FileNode }) {
-  const nameWithoutSuffix = props.name.endsWith(".excalidraw")
-    ? props.name.slice(0, -11)
-    : props.name;
+function FileNodeTile({ node }: { node: FileNode }) {
+  const nameWithoutSuffix = node.name.endsWith(".excalidraw")
+    ? node.name.slice(0, -11)
+    : node.name;
+  const { getCurrentFile, isFileFetching, currentFileNode } = useFile();
   return (
     <>
-      <div className="file-node-tile">{nameWithoutSuffix}</div>
+      <button
+        className="file-node-tile"
+        onClick={() => {
+          getCurrentFile(node);
+        }}
+        draggable
+      >
+        <span className="file-node-spinner">
+          {currentFileNode &&
+            currentFileNode.id === node.id &&
+            isFileFetching && <Spinner className="" />}
+        </span>
+        {nameWithoutSuffix}
+      </button>
     </>
   );
 }

@@ -9,9 +9,17 @@ import { type FileNode, type FileTree } from "./../lib/file-tree-types";
 import { createFile } from "../lib/file";
 import { fetchFile, getFileTree, updateFileTree } from "../lib/file-api";
 import { useAuthUser } from "./useAuth";
+import { useExcalidrawActionManager } from "../../../packages/excalidraw/components/App";
+import { actionLoadScenFromJSON } from "../../../packages/excalidraw/actions/actionExport";
 
 type FileManagerContext = {
   fileTree: FileTree | null;
+  isFileFetching: boolean;
+  currentFileNode: FileNode | null;
+  errors: {
+    error: string;
+    message: string;
+  } | null;
   createExcalidrawFile: (
     fileName: string,
     content: string,
@@ -22,6 +30,7 @@ type FileManagerContext = {
       }
     | undefined
   >;
+  getCurrentFile: (node: FileNode | null) => void;
 };
 
 const fileMenuContext = createContext({
@@ -37,7 +46,7 @@ export function FileMenuProvider({
 }): JSX.Element {
   const fileMenu = useFileMenuProvider();
   if (fileMenu === null) {
-    return <>Component should be wrapped with FileMenuProvider</>;
+    return <>Component should be wrapped in a FileMenuProvider</>;
   }
   return <Provider value={fileMenu}>{children}</Provider>;
 }
@@ -49,7 +58,14 @@ export const useFile = () => {
 const useFileMenuProvider = () => {
   const { data: auth } = useAuthUser();
   const [fileTree, setFileTree] = useState<FileTree | null>(null);
-  //const [currentFileNode, setCurrentFileNode] = useState<FileNode | null>(null);
+  const [currentNode, setCurrentNode] = useState<FileNode | null>(null);
+  const [isFileFetching, setIsFileFetching] = useState(false);
+  const [errors, setErrors] = useState<{
+    error: string;
+    message: string;
+  } | null>(null);
+
+  const actionManager = useExcalidrawActionManager();
 
   useEffect(() => {
     if (auth && auth.user) {
@@ -68,6 +84,31 @@ const useFileMenuProvider = () => {
       });
     }
   }, [auth]);
+
+  if (!actionManager.isActionEnabled(actionLoadScenFromJSON)) {
+    return null;
+  }
+
+  const getCurrentFile = async (node: FileNode | null) => {
+    if (!node || !node.id) {
+      setErrors({
+        error: "file_not_found",
+        message: "File not found",
+      });
+      return;
+    }
+    setCurrentNode(node);
+    setIsFileFetching(true);
+    const fetchedFile = await fetchFile({ fileId: node?.id });
+    if (fetchedFile.error === null) {
+      const Excalidraw_data = JSON.parse(fetchedFile.data);
+      actionManager.executeAction(actionLoadScenFromJSON, "ui", {
+        data: Excalidraw_data,
+      });
+      setErrors(null);
+      setIsFileFetching(false);
+    }
+  };
 
   const createExcalidrawFile = async (fileName: string, content: string) => {
     if (!auth?.user?.id) {
@@ -99,8 +140,12 @@ const useFileMenuProvider = () => {
 
   return {
     fileTree,
+    isFileFetching,
+    errors,
+    currentFileNode: currentNode,
     createExcalidrawFile,
     getExcalidrawFile,
+    getCurrentFile,
   };
 };
 

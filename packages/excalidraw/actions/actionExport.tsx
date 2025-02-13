@@ -240,6 +240,29 @@ export const actionSaveFileToDisk = register({
   ),
 });
 
+export const actionLoadScenFromJSON = register({
+  name: "loadSceneFromJSON",
+  label: "buttons.load",
+  trackEvent: { category: "export" },
+  predicate: (elements, appState, props, app) => {
+    return (
+      !!app.props.UIOptions.canvasActions.loadScene && !appState.viewModeEnabled
+    );
+  },
+  perform: async (elements, appState, extraData, app) => {
+    const fileData = JSON.parse(extraData?.data);
+    const elems = fileData.elements;
+    const appStates = fileData.appState;
+    return {
+      elements: elems,
+      appState: { ...appStates },
+      files: {},
+      storeAction: StoreAction.CAPTURE,
+    };
+  },
+  keyTest: (event) => event[KEYS.CTRL_OR_CMD] && event.key === KEYS.O,
+});
+
 export const actionLoadScene = register({
   name: "loadScene",
   label: "buttons.load",
@@ -283,6 +306,7 @@ export const actionExportWithDarkMode = register({
   label: "imageExportDialog.label.darkMode",
   trackEvent: { category: "export", action: "toggleTheme" },
   perform: (_elements, appState, value) => {
+    console.log(appState, value, "EXPORT IN THE DARK");
     return {
       appState: { ...appState, exportWithDarkMode: value },
       storeAction: StoreAction.NONE,
