@@ -114,6 +114,9 @@ const useFileMenuProvider = () => {
     if (!auth?.user?.id) {
       return { error: "unauthorized", message: "No user id found" };
     }
+    // if (content === "") {
+    //   content = JSON.stringify(EXCALIDRAW_WITH_IMAGE);
+    // }
     const response = await createFile(
       auth.user.id,
       fileName,

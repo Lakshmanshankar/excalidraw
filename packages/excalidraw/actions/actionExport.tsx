@@ -20,6 +20,7 @@ import type { Theme } from "../element/types";
 
 import "../components/ToolIcon.scss";
 import { StoreAction } from "../store";
+import { isValidExcalidrawData } from "../data/json";
 
 export const actionChangeProjectName = register({
   name: "changeProjectName",
@@ -251,13 +252,25 @@ export const actionLoadScenFromJSON = register({
   },
   perform: async (elements, appState, extraData, app) => {
     const fileData = JSON.parse(extraData?.data);
-    const elems = fileData.elements;
-    const appStates = fileData.appState;
+
+    if (isValidExcalidrawData(fileData)) {
+      const excalidrawElements = fileData.elements;
+      const excalidrawAppState = fileData.appState;
+      const excalidrawFiles = fileData?.files;
+      return {
+        elements: excalidrawElements,
+        appState: { ...excalidrawAppState },
+        files: excalidrawFiles,
+        storeAction: StoreAction.CAPTURE,
+      };
+    }
+    //TODO: Need to throw error
+    //
     return {
-      elements: elems,
-      appState: { ...appStates },
+      elements,
+      appState,
       files: {},
-      storeAction: StoreAction.CAPTURE,
+      storeAction: StoreAction.NONE,
     };
   },
   keyTest: (event) => event[KEYS.CTRL_OR_CMD] && event.key === KEYS.O,

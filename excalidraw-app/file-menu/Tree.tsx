@@ -42,7 +42,7 @@ export default function Tree() {
             </Button>
             <Button
               onSelect={() => {
-                createExcalidrawFile("prefix.excalidraw", "");
+                createExcalidrawFile("withImage.excalidraw", "");
               }}
             >
               {FileIcon}
