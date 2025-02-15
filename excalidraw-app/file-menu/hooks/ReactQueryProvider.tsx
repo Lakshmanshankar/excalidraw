@@ -17,4 +17,5 @@ export const KEY = {
   GET_USER: "get_user",
   GET_FILE: "get_file",
   AUTH_USER: "auth_user",
+  FILE_TREE: "file_tree",
 };

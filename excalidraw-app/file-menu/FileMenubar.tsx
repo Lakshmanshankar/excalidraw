@@ -5,7 +5,8 @@ import { FolderIcon } from "../../packages/excalidraw/components/icons";
 import SignIn from "./SignIn";
 import Tree from "./Tree";
 import "./FileMenubar.scss";
-import { FileMenuProvider } from "./hooks/useFile";
+// import { FileMenuProvider } from "./hooks/useFile";
+import { FileProviderOptimized } from "./hooks/useFileOptimized";
 import { type ExcalidrawImperativeAPI } from "../../packages/excalidraw/types";
 
 export const FileTree: React.FC<{
@@ -25,9 +26,11 @@ export const FileTree: React.FC<{
         </DropdownMenu.Trigger>
         <DropdownMenu.Content onClickOutside={() => setOpen(false)}>
           <div className="file-tree-container">
-            <FileMenuProvider excalidrawAPI={excalidrawAPI}>
+            {/* <FileMenuProvider excalidrawAPI={excalidrawAPI}> */}
+            <FileProviderOptimized excalidrawAPI={excalidrawAPI}>
               <Tree />
-            </FileMenuProvider>
+            </FileProviderOptimized>
+            {/* </FileMenuProvider> */}
           </div>
           <SignIn />
         </DropdownMenu.Content>

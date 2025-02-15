@@ -48,17 +48,18 @@ export const createFile = async (
 // Actual files are stored as flat files in the file system.
 export const createFolder = async (
   userId: string,
-  parentFolderName: string,
+  name: string,
   fileTree: FileTree,
+  parentFolderName = "",
 ) => {
   const fileId = v4();
   const newNode: FileNode = {
-    name: parentFolderName,
+    name,
     id: fileId,
     type: "folder",
     children: [],
   };
-  const newFileTree = addNode(fileTree, "", newNode, true);
+  const newFileTree = addNode(fileTree, parentFolderName, newNode, true);
   const res = await updateFileTree(userId, newFileTree);
   if (res.error) {
     return {

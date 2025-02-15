@@ -5,19 +5,26 @@ import {
   searchIcon,
 } from "../../packages/excalidraw/components/icons";
 import { useAuthUser } from "./hooks/useAuth";
-import { useFile } from "./hooks/useFile";
 import { createFolder } from "./lib/file";
 import { type FileNode, type FileTree } from "./lib/file-tree-types";
 import { useI18n } from "../../packages/excalidraw/i18n";
 import Spinner from "../../packages/excalidraw/components/Spinner";
 import { TextField } from "../../packages/excalidraw/components/TextField";
 import { useState } from "react";
+import { useFileOptimized } from "./hooks/useFileOptimized";
+import React from "react";
 
 export default function Tree() {
   const { data } = useAuthUser();
   const [searchQuery, setSearchQuery] = useState("");
-  const { fileTree, createExcalidrawFile, saveCurrentExcalidrawFile } =
-    useFile();
+  // const { fileTree, createExcalidrawFile, saveCurrentExcalidrawFile } =
+  //   useFile();
+  const {
+    fileTree,
+    createExcalidrawFile,
+    saveCurrentFile: saveCurrentExcalidrawFile,
+  } = useFileOptimized();
+
   const { t } = useI18n();
   if (data && data.user) {
     return (
@@ -85,7 +92,12 @@ function FileNodeTile({ node }: { node: FileNode }) {
   const nameWithoutSuffix = node.name.endsWith(".excalidraw")
     ? node.name.slice(0, -11)
     : node.name;
-  const { getCurrentFile, isFileFetching, currentFileNode } = useFile();
+  // const { getCurrentFile, isFileFetching, currentFileNode } = useFile();
+  const {
+    loadFile: getCurrentFile,
+    isFileTreeLoading: isFileFetching,
+    currentFileNode: currentFileNode,
+  } = useFileOptimized();
 
   return (
     <>
