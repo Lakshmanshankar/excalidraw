@@ -8,6 +8,7 @@
   // border: 1px solid var(--sidebar-border-color);
   box-shadow: var(--sidebar-shadow);
   border-radius: 10px;
+  user-select: text;
 
   .dropdown-menu-container {
     height: 540px;
@@ -33,16 +34,45 @@
   width: 95%;
   margin-top: 2px;
   margin-bottom: 2px;
-  font-size:0.9rem;
+  font-size: 0.9rem;
   color: var(--text-primary-color);
   padding: 4px;
   border: 1px solid var(--default-border-color);
   background: var(--color-surface-high);
   border-radius: 5px;
+  user-select: text;
 }
 
-.file-node-spinner{
+.file-node-spinner {
   width: 20px;
   height: 20px;
   margin-right: 5px;
+}
+
+
+.file-menu-search-input {
+  padding-bottom: 5px;
+  display: flex;
+  align-items: center;
+  width: 90%;
+  height: 20px;
+  background-color: #31303b;
+  border-radius: 5px;
+  border-color: var(--ExcTextField--border-active);
+  margin-top: 10px;
+  margin-left: 5px;
+
+  .ExcTextField__input {
+    height: 25px;
+    border: none;
+    border-radius: 0px;
+    background: transparent;
+
+    input {
+      font-size: 0.95rem;
+      height: fit-content;
+      margin-top: 5px;
+      background: transparent;
+    }
+  }
 }

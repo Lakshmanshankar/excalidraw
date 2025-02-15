@@ -2,6 +2,7 @@ import { Button } from "../../packages/excalidraw/components/Button";
 import {
   FileIcon,
   FolderIcon,
+  searchIcon,
 } from "../../packages/excalidraw/components/icons";
 import { useAuthUser } from "./hooks/useAuth";
 import { useFile } from "./hooks/useFile";
@@ -9,14 +10,30 @@ import { createFolder } from "./lib/file";
 import { type FileNode, type FileTree } from "./lib/file-tree-types";
 import { useI18n } from "../../packages/excalidraw/i18n";
 import Spinner from "../../packages/excalidraw/components/Spinner";
+import { TextField } from "../../packages/excalidraw/components/TextField";
+import { useState } from "react";
 
 export default function Tree() {
   const { data } = useAuthUser();
-  const { fileTree, createExcalidrawFile } = useFile();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { fileTree, createExcalidrawFile, saveCurrentExcalidrawFile } =
+    useFile();
   const { t } = useI18n();
   if (data && data.user) {
     return (
       <>
+        <div className="file-menu-search">
+          <TextField
+            className="file-menu-search-input"
+            value={searchQuery}
+            icon={searchIcon}
+            placeholder="Search for a file"
+            onChange={(e) => {
+              setSearchQuery(e);
+            }}
+          />
+        </div>
+
         <div className="file-menu-recent-container">
           <h1 className="file-menu-heading">{t("labels.fileMenu.recent")}</h1>
           <div className="file-menu-recent">
@@ -25,7 +42,16 @@ export default function Tree() {
             ))}
           </div>
         </div>
-
+        <div>
+          <Button
+            onSelect={() => {
+              saveCurrentExcalidrawFile();
+            }}
+          >
+            {" "}
+            Save
+          </Button>
+        </div>
         <div style={{ display: "flex", gap: "5px", marginTop: "5px" }}>
           <h1 className="file-menu-heading">{t("labels.fileMenu.files")}</h1>
           <div style={{ display: "flex", gap: "5px" }}>
@@ -42,7 +68,7 @@ export default function Tree() {
             </Button>
             <Button
               onSelect={() => {
-                createExcalidrawFile("withImage.excalidraw", "");
+                createExcalidrawFile("fileName.excalidraw", "");
               }}
             >
               {FileIcon}
@@ -60,6 +86,7 @@ function FileNodeTile({ node }: { node: FileNode }) {
     ? node.name.slice(0, -11)
     : node.name;
   const { getCurrentFile, isFileFetching, currentFileNode } = useFile();
+
   return (
     <>
       <button

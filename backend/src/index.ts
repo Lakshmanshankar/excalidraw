@@ -5,7 +5,7 @@ import { ExpressAuth } from '@auth/express';
 import userRoutes from '~/routes/userRoutes';
 import fileRoutes from '~/routes/fileRoutes';
 import { authConfig } from '~/config/auth';
-import { authMiddleware } from '~/config/auth.middleware';
+import { authMiddleware, currentSession } from '~/config/auth.middleware';
 
 dotenv.config();
 const app = express();
@@ -19,14 +19,14 @@ app.use(
         origin: 'http://localhost:3001',
         credentials: true,
         allowedHeaders: ['Content-Type', 'Authorization'],
-        // methods: ['GET', 'POST']
+        methods: ['GET', 'POST'],
     }),
 );
 
 //Set up ExpressAuth to handle authentication
 // IMPORTANT: It is highly encouraged set up rate limiting on this route
 app.use('/api/auth/*', ExpressAuth(authConfig));
-
+app.use('/api/user_session',currentSession)
 app.use('/api/v1', authMiddleware);
 app.use('/api/v1/file', fileRoutes);
 app.use('/api', userRoutes);

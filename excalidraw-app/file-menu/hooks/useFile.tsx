@@ -11,6 +11,8 @@ import { fetchFile, getFileTree, updateFileTree } from "../lib/file-api";
 import { useAuthUser } from "./useAuth";
 import { useExcalidrawActionManager } from "../../../packages/excalidraw/components/App";
 import { actionLoadScenFromJSON } from "../../../packages/excalidraw/actions/actionExport";
+import { type ExcalidrawImperativeAPI } from "../../../packages/excalidraw/types";
+//import JSON_FILE from './sample.json'
 
 type FileManagerContext = {
   fileTree: FileTree | null;
@@ -31,6 +33,7 @@ type FileManagerContext = {
     | undefined
   >;
   getCurrentFile: (node: FileNode | null) => void;
+  saveCurrentExcalidrawFile: () => void;
 };
 
 const fileMenuContext = createContext({
@@ -39,12 +42,16 @@ const fileMenuContext = createContext({
 
 const { Provider } = fileMenuContext;
 
+interface FileMenuProviderProps {
+  children: ReactNode;
+  excalidrawAPI: ExcalidrawImperativeAPI;
+}
+
 export function FileMenuProvider({
   children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
-  const fileMenu = useFileMenuProvider();
+  excalidrawAPI,
+}: FileMenuProviderProps): JSX.Element {
+  const fileMenu = useFileMenuProvider({ excalidrawAPI });
   if (fileMenu === null) {
     return <>Component should be wrapped in a FileMenuProvider</>;
   }
@@ -55,7 +62,11 @@ export const useFile = () => {
   return useContext(fileMenuContext);
 };
 
-const useFileMenuProvider = () => {
+const useFileMenuProvider = ({
+  excalidrawAPI,
+}: {
+  excalidrawAPI: ExcalidrawImperativeAPI;
+}) => {
   const { data: auth } = useAuthUser();
   const [fileTree, setFileTree] = useState<FileTree | null>(null);
   const [currentNode, setCurrentNode] = useState<FileNode | null>(null);
@@ -110,13 +121,20 @@ const useFileMenuProvider = () => {
     }
   };
 
+  const saveCurrentExcalidrawFile = async () => {
+    const elements = excalidrawAPI.getSceneElementsIncludingDeleted();
+    const appState = excalidrawAPI.getAppState();
+    const appFiles = excalidrawAPI.getFiles();
+    console.log(elements, appState, appFiles);
+  };
+
   const createExcalidrawFile = async (fileName: string, content: string) => {
     if (!auth?.user?.id) {
       return { error: "unauthorized", message: "No user id found" };
     }
-    // if (content === "") {
-    //   content = JSON.stringify(EXCALIDRAW_WITH_IMAGE);
-    // }
+    //if (content === "") {
+    //  content = JSON.stringify(JSON_FILE);
+    //}
     const response = await createFile(
       auth.user.id,
       fileName,
@@ -149,6 +167,7 @@ const useFileMenuProvider = () => {
     createExcalidrawFile,
     getExcalidrawFile,
     getCurrentFile,
+    saveCurrentExcalidrawFile,
   };
 };
 

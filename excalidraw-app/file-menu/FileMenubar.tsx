@@ -6,10 +6,17 @@ import SignIn from "./SignIn";
 import Tree from "./Tree";
 import "./FileMenubar.scss";
 import { FileMenuProvider } from "./hooks/useFile";
+import { type ExcalidrawImperativeAPI } from "../../packages/excalidraw/types";
 
-export const FileTree: React.FC<{}> = React.memo(() => {
+export const FileTree: React.FC<{
+  excalidrawAPI: ExcalidrawImperativeAPI | null;
+}> = React.memo(({ excalidrawAPI }) => {
   const [open, setOpen] = useState(false);
   const { FileTreeTunnel } = useTunnels();
+
+  if (excalidrawAPI === null) {
+    return <div>No Excalidraw API</div>;
+  }
   return (
     <FileTreeTunnel.In>
       <DropdownMenu open={open}>
@@ -18,7 +25,7 @@ export const FileTree: React.FC<{}> = React.memo(() => {
         </DropdownMenu.Trigger>
         <DropdownMenu.Content onClickOutside={() => setOpen(false)}>
           <div className="file-tree-container">
-            <FileMenuProvider>
+            <FileMenuProvider excalidrawAPI={excalidrawAPI}>
               <Tree />
             </FileMenuProvider>
           </div>

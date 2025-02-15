@@ -358,7 +358,7 @@ const ExcalidrawWrapper = () => {
       trackEvent("load", "version", getVersion());
     }, VERSION_TIMEOUT);
   }, []);
-
+  //
   const [excalidrawAPI, excalidrawRefCallback] =
     useCallbackRefState<ExcalidrawImperativeAPI>();
 
@@ -870,7 +870,7 @@ const ExcalidrawWrapper = () => {
             setTheme={(theme) => setAppTheme(theme)}
             refresh={() => forceRefresh((prev) => !prev)}
           />
-          <FileTree />
+          <FileTree excalidrawAPI={excalidrawAPI} />
         </div>
         <AppWelcomeScreen
           onCollabDialogOpen={onCollabDialogOpen}

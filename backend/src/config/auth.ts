@@ -12,6 +12,7 @@ export const authConfig = {
         },
 
         async session({ session }: { session: Session }) {
+            console.log('session', session);
             try {
                 const userData: SelectUser[] = await getUserByEmailFn(session?.user?.email || '');
                 const sessionUser = session?.user;
@@ -22,6 +23,7 @@ export const authConfig = {
                     sessionUser?.image
                 ) {
                     try {
+                        console.log('New user', sessionUser.email);
                         const res = await createUserWithObjectStore({
                             email: sessionUser?.email,
                             name: sessionUser?.name,
@@ -37,6 +39,7 @@ export const authConfig = {
                     ...session.user,
                     ...userData[0],
                 };
+                console.log('New user session', session.user);
                 return session;
             } catch (error) {
                 console.error('Error in generating session callback:', error);

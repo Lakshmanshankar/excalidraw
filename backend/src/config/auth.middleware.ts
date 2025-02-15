@@ -2,6 +2,7 @@
 import { getSession } from '@auth/express';
 import { authConfig } from '~/config/auth';
 import type { NextFunction, Request, Response } from 'express';
+import { console } from 'inspector';
 
 export async function authMiddleware(
     req: Request,
@@ -10,6 +11,7 @@ export async function authMiddleware(
 ): Promise<void> {
     try {
         const session = res.locals.session ?? (await getSession(req, authConfig)) ?? undefined;
+        console.log('session middlware running')
         res.locals.session = session;
         if (session) {
             return next();
@@ -22,6 +24,7 @@ export async function authMiddleware(
 
 export async function currentSession(req: Request, res: Response, next: NextFunction) {
     const session = (await getSession(req, authConfig)) ?? undefined;
+    console.log('current',session)
     res.locals.session = session;
     return next();
 }
