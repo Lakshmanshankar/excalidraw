@@ -139,6 +139,7 @@ const useFileMenuProvider = ({
       auth.user.id,
       fileName,
       content,
+      "", // this can lead to bug
       fileTree as unknown as FileTree,
     );
     if (response?.error === null) {

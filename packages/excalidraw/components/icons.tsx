@@ -60,6 +60,16 @@ const folderIconProps: Opts = {
   strokeLinejoin: "round",
 } as const;
 
+const SaveFileIconProps: Opts = {
+  width: 24,
+  height: 20,
+  fill: "none",
+  strokeWidth: 2,
+  stroke: "currentColor",
+  strokeLinecap: "round",
+  strokeLinejoin: "round",
+} as const;
+
 const modifiedTablerIconProps: Opts = {
   width: 20,
   height: 20,
@@ -452,6 +462,27 @@ export const HamburgerMenuIcon = createIcon(
 export const FolderIcon = createIcon(
   <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />,
   folderIconProps,
+);
+
+export const FolderClosedIcon = createIcon(
+  <path d="m9 18 6-6-6-6" />,
+  folderIconProps,
+);
+
+export const SaveFileIcon = createIcon(
+  <>
+    <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+    <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
+    <path d="M7 3v4a1 1 0 0 0 1 1h7" />,
+  </>,
+  SaveFileIconProps,
+);
+
+export const FileOpenIcon = createIcon(
+  <>
+    <path d="m9 18 6-6-6-6" />
+  </>,
+  SaveFileIconProps,
 );
 
 export const FileIcon = createIcon(

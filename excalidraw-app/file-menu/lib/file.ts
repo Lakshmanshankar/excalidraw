@@ -7,6 +7,7 @@ export const createFile = async (
   userId: string,
   fileName: string,
   content: string,
+  parentFolderId: string,
   fileTree: FileTree,
 ) => {
   const fileId = v4();
@@ -24,7 +25,7 @@ export const createFile = async (
       type: "file",
       children: [],
     };
-    const newFileTree = addNode(fileTree, "", newNode);
+    const newFileTree = addNode(fileTree, parentFolderId, newNode);
     const res = await updateFileTree(userId, newFileTree);
     if (res.error) {
       return {
@@ -59,7 +60,7 @@ export const createFolder = async (
     type: "folder",
     children: [],
   };
-  const newFileTree = addNode(fileTree, parentFolderName, newNode, true);
+  const newFileTree = addNode(fileTree, parentFolderName, newNode);
   const res = await updateFileTree(userId, newFileTree);
   if (res.error) {
     return {

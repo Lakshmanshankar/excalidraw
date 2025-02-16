@@ -16,6 +16,8 @@ export function addNode(
       tree.recent.length === 0;
     if (canAddNewNode && newNode.type === "file") {
       tree.recent.push(newNode);
+    } else if (canAddNewNode && newNode.type === "folder") {
+      tree.children.push(newNode);
     }
     return tree;
   }

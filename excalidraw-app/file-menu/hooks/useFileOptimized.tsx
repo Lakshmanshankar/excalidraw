@@ -1,15 +1,15 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { createFile } from "../lib/file";
+import { createFile, createFolder as createFolderAPI } from "../lib/file";
 import { fetchFile, getFileTree, updateFileTree } from "../lib/file-api";
 import { useAuthUser } from "./useAuth";
 import { useExcalidrawActionManager } from "../../../packages/excalidraw/components/App";
 import { actionLoadScenFromJSON } from "../../../packages/excalidraw/actions/actionExport";
-import React from "react";
 import type { ReactNode } from "react";
 import { type FileNode, type FileTree } from "../lib/file-tree-types";
 import { type ExcalidrawImperativeAPI } from "../../../packages/excalidraw/types";
 import { KEY } from "./ReactQueryProvider";
+import DEFAULT_EXCALIDRAW from "./default.json";
 
 type FileContext = {
   fileTree: FileTree | null;
@@ -23,7 +23,12 @@ type FileContext = {
   } | null;
   loadFile: (node: FileNode | null) => Promise<any>;
   saveCurrentFile: () => Promise<any>;
-  createExcalidrawFile: (fileName: string, content: string) => Promise<any>;
+  createExcalidrawFile: (
+    fileName: string,
+    content: string,
+    parentFolderId: string,
+  ) => Promise<any>;
+  createFolder: (folderName: string, parentFolderId: string) => Promise<any>;
 };
 
 const fileContext = createContext<FileContext>({
@@ -36,6 +41,7 @@ const fileContext = createContext<FileContext>({
   loadFile: async () => {},
   saveCurrentFile: async () => {},
   createExcalidrawFile: async () => {},
+  createFolder: async () => {},
 });
 
 const { Provider } = fileContext;
@@ -108,22 +114,61 @@ export const useFileHook = (excalidrawAPI: ExcalidrawImperativeAPI) => {
     // refetchOnWindowFocus: false,
   });
 
+  const createFolderMuation = useMutation({
+    mutationFn: async ({
+      folderName,
+      parentFolderId,
+    }: {
+      folderName: string;
+      parentFolderId: string;
+    }) => {
+      if (!auth?.user?.id) {
+        throw new Error("Unauthorized: No user ID found");
+      }
+
+      return createFolderAPI(
+        auth.user.id,
+        folderName,
+        fileTreeResponse?.data?.file_tree as FileTree,
+        parentFolderId,
+      );
+    },
+    onSuccess: (data) => {
+      if (data?.error === null) {
+        console.log(data);
+        queryClient.setQueryData([KEY.FILE_TREE, userId], (oldData: any) => {
+          return {
+            ...oldData,
+            file_tree: data.data?.fileTree,
+          };
+        });
+      }
+    },
+  });
+
   const createFileMutation = useMutation({
     mutationFn: async ({
       fileName,
       content,
+      parentFolderId,
     }: {
       fileName: string;
       content: string;
+      parentFolderId: string;
     }) => {
       if (!auth?.user?.id) {
         throw new Error("Unauthorized: No user ID found");
+      }
+
+      if (content === "") {
+        content = JSON.stringify(DEFAULT_EXCALIDRAW);
       }
 
       return createFile(
         auth.user.id,
         fileName,
         content,
+        parentFolderId,
         fileTreeResponse?.data?.file_tree as FileTree,
       );
     },
@@ -156,10 +201,11 @@ export const useFileHook = (excalidrawAPI: ExcalidrawImperativeAPI) => {
         const fetchedFile = await queryClient.fetchQuery({
           queryKey: ["file", node.id],
           queryFn: () => fetchFile({ fileId: node.id }),
-          staleTime: 5 * 60 * 1000,
+          // staleTime: 5 * 60 * 1000
         });
         if (fetchedFile.error === null) {
           const sceneData = JSON.parse(fetchedFile.data);
+          // console.log(sceneData);
           actionManager.executeAction(actionLoadScenFromJSON, "ui", {
             data: sceneData,
           });
@@ -214,20 +260,28 @@ export const useFileHook = (excalidrawAPI: ExcalidrawImperativeAPI) => {
     // return response;
   };
 
-  /**
-   * Creates a new file.
-   * Can be extended to also support folder creation.
-   */
-  const createExcalidrawFile = async (fileName: string, content: string) => {
+  const createExcalidrawFile = async (
+    fileName: string,
+    content: string,
+    parentFolderId: string,
+  ) => {
     if (!auth?.user?.id) {
       return { error: "unauthorized", message: "No user id found" };
     }
-    return createFileMutation.mutateAsync({ fileName, content });
+    return createFileMutation.mutateAsync({
+      fileName,
+      content,
+      parentFolderId,
+    });
   };
 
-  // --- Placeholders for future features ---
-  // const createFolder = async (folderName: string, parentFolderId: string) => { ... };
-  // const handleDragAndDrop = (sourceId: string, targetFolderId: string) => { ... };
+  const createFolder = async (folderName: string, parentFolderId: string) => {
+    console.log(folderName,parentFolderId)
+    return createFolderMuation.mutateAsync({
+      folderName,
+      parentFolderId,
+    });
+  };
 
   return {
     fileTree: fileTreeResponse?.data?.file_tree ?? null,
@@ -241,6 +295,7 @@ export const useFileHook = (excalidrawAPI: ExcalidrawImperativeAPI) => {
     loadFile,
     saveCurrentFile,
     createExcalidrawFile,
+    createFolder,
   };
 };
 

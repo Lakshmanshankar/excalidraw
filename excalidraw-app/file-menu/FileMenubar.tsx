@@ -8,6 +8,7 @@ import "./FileMenubar.scss";
 // import { FileMenuProvider } from "./hooks/useFile";
 import { FileProviderOptimized } from "./hooks/useFileOptimized";
 import { type ExcalidrawImperativeAPI } from "../../packages/excalidraw/types";
+import SaveButton from "./SaveButton";
 
 export const FileTree: React.FC<{
   excalidrawAPI: ExcalidrawImperativeAPI | null;
@@ -20,21 +21,21 @@ export const FileTree: React.FC<{
   }
   return (
     <FileTreeTunnel.In>
-      <DropdownMenu open={open}>
-        <DropdownMenu.Trigger onToggle={() => setOpen(!open)}>
-          {FolderIcon}
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content onClickOutside={() => setOpen(false)}>
-          <div className="file-tree-container">
-            {/* <FileMenuProvider excalidrawAPI={excalidrawAPI}> */}
-            <FileProviderOptimized excalidrawAPI={excalidrawAPI}>
+      <FileProviderOptimized excalidrawAPI={excalidrawAPI}>
+        <DropdownMenu open={open}>
+          <DropdownMenu.Trigger onToggle={() => setOpen(!open)}>
+            {FolderIcon}
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content onClickOutside={() => setOpen(false)}>
+            <div className="file-tree-container">
               <Tree />
-            </FileProviderOptimized>
-            {/* </FileMenuProvider> */}
-          </div>
-          <SignIn />
-        </DropdownMenu.Content>
-      </DropdownMenu>
+            </div>
+            <SignIn />
+          </DropdownMenu.Content>
+        </DropdownMenu>
+
+       <SaveButton />
+      </FileProviderOptimized>
     </FileTreeTunnel.In>
   );
 });
