@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 import { type FileNode, type FileTree } from "./file-tree-types";
-import { addNode, getParentNodeId, updateNode } from "./file-tree-utils";
+import { addNode, updateNode } from "./file-tree-utils";
 import { updateFileTree, uploadFileUsingSignedURL } from "./file-api";
 
 export const createFile = async (
@@ -78,30 +78,47 @@ export const createFolder = async (
   };
 };
 
-export const updateFile = async (
+export const updateFileOrFolder = async (
+  userId: string,
   fileId: string,
-  content: string,
-  fileTree: FileTree,
   newNode: FileNode,
+  fileTree: FileTree,
+  content?: string,
   shouldUpdateProperties = false,
 ) => {
-  const excalidrawFile = new Blob([JSON.stringify(content)], {
-    type: "application/json",
-  });
-  const uploadFileToBlob = await uploadFileUsingSignedURL({
-    fileId,
-    fileBlob: excalidrawFile,
-  });
-  if (uploadFileToBlob.error === null && shouldUpdateProperties) {
-    const parentFolderId = getParentNodeId(fileTree, fileId);
-    const newFileTree = updateNode(fileTree, parentFolderId, newNode);
-    return {
-      error: null,
-      message: "File updated successfully",
-      data: {
-        fileTree: newFileTree,
-      },
-    };
+  async function updateFileTreeNode() {
+    const newFileTree = updateNode(fileTree, fileId, newNode);
+    const res = await updateFileTree(userId, newFileTree);
+    return res.error
+      ? { error: res.error, message: res.message, data: res.data }
+      : {
+          error: null,
+          message: "FileNode updated successfully",
+          data: { fileTree: newFileTree },
+        };
   }
-  return {};
+
+  if (newNode.type === "file") {
+    const excalidrawFile = new Blob([JSON.stringify(content)], {
+      type: "application/json",
+    });
+    const uploadFileToBlob = await uploadFileUsingSignedURL({
+      fileId,
+      fileBlob: excalidrawFile,
+    });
+
+    if (uploadFileToBlob.error) {
+      return {
+        error: uploadFileToBlob.error,
+        message: "File upload failed",
+        data: null,
+      };
+    }
+
+    if (!shouldUpdateProperties) {
+      return { error: null, message: "File uploaded successfully", data: null };
+    }
+  }
+
+  return updateFileTreeNode();
 };

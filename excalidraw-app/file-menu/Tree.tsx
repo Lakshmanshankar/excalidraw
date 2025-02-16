@@ -1,5 +1,6 @@
 import { Button } from "../../packages/excalidraw/components/Button";
 import {
+  EditFileIcon,
   FileIcon,
   FileOpenIcon,
   FolderClosedIcon,
@@ -45,12 +46,9 @@ export default function Tree() {
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: "5px", marginTop: "5px" }}>
-          <h1 className="file-menu-heading">{t("labels.fileMenu.files")}</h1>
-          <FolderNode
-            node={{ id: "", name: "root", type: "folder", children: [] }}
-          />
-        </div>
+        <FolderNode
+          node={{ id: "", name: "root", type: "folder", children: [] }}
+        />
 
         {/* FILE TREE */}
         <div className="file-menu-tree-container">
@@ -69,32 +67,57 @@ export default function Tree() {
 
 function FolderNode({ node, depth = 0 }: { node: FileNode; depth?: number }) {
   const [canShowCreateFolder, setCanShowCreateFolder] = useState(false);
+  const [canEditFileName, setCanEditFileName] = useState(false);
   const [isFile, setIsFile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const isRootNode = node.id === "" && node.name === "root";
+  const { t } = useI18n();
 
   if (node.type !== "folder") {
     return null;
   }
 
+  const onFileSaveHandler = async () => {
+    setCanEditFileName(false);
+    setCanShowCreateFolder(false);
+  };
+
   return (
     <div className="file-menu-folder-item-container">
       <div
         className="file-menu-folder-trigger"
-        style={{ marginLeft: depth * 20 }}
+        style={{
+          marginLeft: depth * 20,
+          ...(isRootNode && { background: "transparent" }),
+        }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="file-menu-folder-item-inner">
-          <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
-            <button
-              className="file-menu-toggle-button"
-              onClick={() => setIsOpen((prev) => !prev)}
-            >
-              {isOpen ? FolderClosedIcon : FileOpenIcon}
-            </button>
-            {node.name}
-            {isHovered && (
+          <div
+            style={{
+              display: "flex",
+              gap: "5px",
+              alignItems: "center",
+            }}
+          >
+            {isRootNode ? null : (
+              <button
+                className="file-menu-toggle-button"
+                onClick={() => setIsOpen((prev) => !prev)}
+              >
+                {isOpen ? FolderClosedIcon : FileOpenIcon}
+              </button>
+            )}
+            {isRootNode ? (
+              <h1 className="file-menu-heading">
+                {t("labels.fileMenu.files")}
+              </h1>
+            ) : (
+              node.name
+            )}
+            {(isHovered || isRootNode) && (
               <div style={{ display: "flex", gap: "5px" }}>
                 <Button
                   className="file-menu-button"
@@ -111,21 +134,40 @@ function FolderNode({ node, depth = 0 }: { node: FileNode; depth?: number }) {
                 >
                   {FileIcon}
                 </Button>
+
+                {!isRootNode && (
+                  <Button
+                    className="file-menu-button"
+                    onSelect={() => {
+                      setCanEditFileName((prev) => !prev);
+                    }}
+                  >
+                    {EditFileIcon}
+                  </Button>
+                )}
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {canShowCreateFolder ? (
+      {canEditFileName && (
         <div className="file-menu-folder-content create-folder-container">
-          {canShowCreateFolder && (
-            <CreateFolderInput parentFolderId={node.id} isFile={isFile} />
-          )}
+          <UpdateFileNode node={node} onClose={onFileSaveHandler} />
         </div>
-      ) : null}
+      )}
 
-      {isOpen ? (
+      {canShowCreateFolder && (
+        <div className="file-menu-folder-content create-folder-container">
+          <CreateFolderInput
+            parentFolderId={node.id}
+            isFile={isFile}
+            onClose={onFileSaveHandler}
+          />
+        </div>
+      )}
+
+      {isOpen && (
         <div className="file-menu-folder-content">
           {node.children?.map((child) => {
             if (child.type === "folder") {
@@ -138,7 +180,7 @@ function FolderNode({ node, depth = 0 }: { node: FileNode; depth?: number }) {
             );
           })}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
@@ -147,32 +189,101 @@ function FileNodeTile({ node, depth }: { node: FileNode; depth: number }) {
   const nameWithoutSuffix = node.name.endsWith(".excalidraw")
     ? node.name.slice(0, -11)
     : node.name;
+  const [canEditFileName, setCanEditFileName] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const {
     loadFile: getCurrentFile,
     isCurrentNodeFetching: isFileFetching,
     currentFileNode,
   } = useFileOptimized();
 
+  const exitFileEdit = () => {
+    setCanEditFileName(false);
+  };
   return (
-    <div style={{ marginLeft: depth * 20 }}>
-      <button
-        className="file-node-tile"
-        onClick={() => {
-          getCurrentFile(node);
+    <div
+      style={{ marginLeft: depth * 20 }}
+      className="file-node-tile"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div style={{ display: "flex", gap: "5px" }}>
+        <button
+          onClick={() => {
+            getCurrentFile(node);
+          }}
+          className="file-node-tile-button"
+          draggable
+        >
+          <span className="file-node-spinner file-menu-button">
+            {currentFileNode &&
+            currentFileNode.id === node.id &&
+            isFileFetching ? (
+              <Spinner className="" />
+            ) : (
+              FileIcon
+            )}
+          </span>
+          {nameWithoutSuffix}
+        </button>
+        {isHovered && (
+          <Button
+            className="file-menu-button"
+            onSelect={() => {
+              setCanEditFileName((prev) => !prev);
+            }}
+          >
+            {EditFileIcon}
+          </Button>
+        )}
+      </div>
+
+      {canEditFileName && (
+        <div className="file-menu-folder-content create-folder-container">
+          <UpdateFileNode node={node} onClose={exitFileEdit} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function UpdateFileNode({
+  node: fileNode,
+  onClose,
+}: {
+  node: FileNode;
+  onClose?: () => void;
+}) {
+  const [folderName, setFolderName] = useState(fileNode.name);
+  const { updateFileNode } = useFileOptimized();
+  return (
+    <div
+      style={{
+        display: "flex",
+        gap: "5px",
+        alignItems: "center",
+        height: "18px",
+      }}
+    >
+      <TextField
+        className="file-menu-search-input"
+        value={folderName}
+        icon={FolderIcon}
+        placeholder="Enter Folder name"
+        onChange={(e) => {
+          setFolderName(e);
         }}
-        draggable
+      />
+      <Button
+        className="file-menu-button"
+        onSelect={() => {
+          updateFileNode(fileNode.id, { ...fileNode, name: folderName });
+          onClose && onClose();
+        }}
+        style={{ marginTop: "3px" }}
       >
-        <span className="file-node-spinner file-menu-button">
-          {currentFileNode &&
-          currentFileNode.id === node.id &&
-          isFileFetching ? (
-            <Spinner className="" />
-          ) : (
-            FileIcon
-          )}
-        </span>
-        {nameWithoutSuffix}
-      </button>
+        {SaveFileIcon}
+      </Button>
     </div>
   );
 }
@@ -180,9 +291,11 @@ function FileNodeTile({ node, depth }: { node: FileNode; depth: number }) {
 function CreateFolderInput({
   parentFolderId,
   isFile = false,
+  onClose,
 }: {
   parentFolderId: string;
   isFile: boolean;
+  onClose?: () => void;
 }) {
   const [folderName, setFolderName] = useState("");
   const { createFolder, createExcalidrawFile } = useFileOptimized();
@@ -212,6 +325,7 @@ function CreateFolderInput({
           } else {
             createFolder(folderName, parentFolderId);
           }
+          onClose && onClose();
         }}
         style={{ marginTop: "3px" }}
       >

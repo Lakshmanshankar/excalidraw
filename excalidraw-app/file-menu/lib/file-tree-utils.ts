@@ -49,21 +49,22 @@ function addNodeHelper(
 
 export function updateNode(
   tree: FileTree,
-  folderId: string | null,
+  fileNodeId: string | null,
   newProperties: Partial<FileNode>,
 ) {
   if (!newProperties.id) {
     return tree;
   }
-
-  if (!folderId) {
-    tree.recent = tree.recent.map((item) =>
-      item.id === newProperties.id ? { ...item, ...newProperties } : item,
-    );
+  if (!fileNodeId) {
+    console.error("File node id is null");
     return tree;
   }
+  tree.recent = tree.recent.map((item) =>
+    item.id === newProperties.id ? { ...item, ...newProperties } : item,
+  );
+
   for (const node of tree.children) {
-    if (updateFolderHelper(node, folderId, newProperties)) {
+    if (updateFolderHelper(node, fileNodeId, newProperties)) {
       return tree;
     }
   }

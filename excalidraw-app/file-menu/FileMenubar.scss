@@ -30,16 +30,27 @@
 
 .file-node-tile {
   display: flex;
-  width: 95%;
   margin-top: 2px;
+  flex-direction: column;
   margin-bottom: 2px;
   font-size: 0.9rem;
-  color: var(--text-primary-color);
-  padding: 4px;
+  width: 95%;
   border: 1px solid var(--default-border-color);
   background: var(--color-surface-mid);
-  border-radius: 5px;
-  user-select: text;
+  
+  .file-node-tile-button{
+    display: flex;
+    width: max-content;
+    color: var(--text-primary-color);
+    padding: 4px;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    user-select: text;
+  }
+  .create-folder-container{
+    min-height: 30px;
+  }
 }
 
 .file-node-spinner {
@@ -79,13 +90,13 @@
   display: flex;
   flex-direction: column;
   padding: 5px;
-  max-height: 550px;
+  max-height: 300px;
   overflow-y: scroll;
 }
 .file-menu-button {
   padding: 0 !important;
   background: transparent !important;
-  border: none;
+  border: none !important;
   color: var(--color-primary) !important;
   max-width: 18px;
   max-height: 18px;
