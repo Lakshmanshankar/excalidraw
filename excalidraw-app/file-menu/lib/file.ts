@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 import { type FileNode, type FileTree } from "./file-tree-types";
-import { addNode, updateNode } from "./file-tree-utils";
+import { addNode, moveNode, updateNode } from "./file-tree-utils";
 import { updateFileTree, uploadFileUsingSignedURL } from "./file-api";
 
 export const createFile = async (
@@ -76,6 +76,23 @@ export const createFolder = async (
       fileTree: newFileTree,
     },
   };
+};
+
+export const moveFileNodeAPI = async (
+  sourceNodeId: string,
+  destinationContainerId: string,
+  fileTree: FileTree,
+  userId: string,
+) => {
+  const newFileTree = moveNode(fileTree, sourceNodeId, destinationContainerId);
+  const res = await updateFileTree(userId, newFileTree);
+  return res.error
+    ? { error: res.error, message: res.message, data: res.data }
+    : {
+        error: null,
+        message: "FileNode updated successfully",
+        data: { fileTree: newFileTree },
+      };
 };
 
 export const updateFileOrFolder = async (

@@ -33,8 +33,7 @@ export const FileTree: React.FC<{
             <SignIn />
           </DropdownMenu.Content>
         </DropdownMenu>
-
-       <SaveButton />
+        <SaveButton />
       </FileProviderOptimized>
     </FileTreeTunnel.In>
   );

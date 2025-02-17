@@ -122,10 +122,9 @@ const useFileMenuProvider = ({
   };
 
   const saveCurrentExcalidrawFile = async () => {
-    const elements = excalidrawAPI.getSceneElementsIncludingDeleted();
-    const appState = excalidrawAPI.getAppState();
-    const appFiles = excalidrawAPI.getFiles();
-    console.log(elements, appState, appFiles);
+    // const elements = excalidrawAPI.getSceneElementsIncludingDeleted();
+    // const appState = excalidrawAPI.getAppState();
+    // const appFiles = excalidrawAPI.getFiles();
   };
 
   const createExcalidrawFile = async (fileName: string, content: string) => {

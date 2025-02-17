@@ -478,6 +478,26 @@ export const SaveFileIcon = createIcon(
   SaveFileIconProps,
 );
 
+export const CutFileIcon = createIcon(
+  <>
+    <circle cx="6" cy="6" r="3" />
+    <path d="M8.12 8.12 12 12" />
+    <path d="M20 4 8.12 15.88" />
+    <circle cx="6" cy="18" r="3" />
+    <path d="M14.8 14.8 20 20" />
+  </>,
+  SaveFileIconProps,
+);
+
+export const PasteFileIcon = createIcon(
+  <>
+    <path d="M15 2H9a1 1 0 0 0-1 1v2c0 .6.4 1 1 1h6c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1Z" />
+    <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2M16 4h2a2 2 0 0 1 2 2v2M11 14h10" />
+    <path d="m17 10 4 4-4 4" />
+  </>,
+  SaveFileIconProps,
+);
+
 export const EditFileIcon = createIcon(
   <>
     <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />

@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createFile,
   createFolder as createFolderAPI,
+  moveFileNodeAPI,
   updateFileOrFolder,
 } from "../lib/file";
 import { fetchFile, getFileTree, updateFileTree } from "../lib/file-api";
@@ -34,6 +35,10 @@ type FileContext = {
   ) => Promise<any>;
   createFolder: (folderName: string, parentFolderId: string) => Promise<any>;
   updateFileNode: (fileId: string, updatedNode: FileNode) => Promise<any>;
+  moveFileNode: (
+    sourceNodeId: string,
+    destinationContainerId: string,
+  ) => Promise<any>;
 };
 
 const fileContext = createContext<FileContext>({
@@ -48,6 +53,7 @@ const fileContext = createContext<FileContext>({
   createExcalidrawFile: async () => {},
   createFolder: async () => {},
   updateFileNode: async () => {},
+  moveFileNode: async () => {},
 });
 
 const { Provider } = fileContext;
@@ -137,6 +143,37 @@ export const useFileHook = (excalidrawAPI: ExcalidrawImperativeAPI) => {
         folderName,
         fileTreeResponse?.data?.file_tree as FileTree,
         parentFolderId,
+      );
+    },
+    onSuccess: (data) => {
+      if (data?.error === null) {
+        queryClient.setQueryData([KEY.FILE_TREE, userId], (oldData: any) => {
+          return {
+            ...oldData,
+            file_tree: data.data?.fileTree,
+          };
+        });
+      }
+    },
+  });
+
+  const moveFileMutatoin = useMutation({
+    mutationFn: async ({
+      sourceId: sourceNodeId,
+      destinationContainerId,
+    }: {
+      sourceId: string;
+      destinationContainerId: string;
+    }) => {
+      if (!auth?.user?.id) {
+        throw new Error("Unauthorized: No user ID found");
+      }
+
+      return moveFileNodeAPI(
+        sourceNodeId,
+        destinationContainerId,
+        fileTreeResponse?.data?.file_tree as FileTree,
+        auth.user.id,
       );
     },
     onSuccess: (data) => {
@@ -275,33 +312,29 @@ export const useFileHook = (excalidrawAPI: ExcalidrawImperativeAPI) => {
    * - Otherwise, it updates the file in place and invalidates the file tree if needed.
    */
   const saveCurrentFile = async () => {
-    const elements = excalidrawAPI.getSceneElementsIncludingDeleted();
-    const appState = excalidrawAPI.getAppState();
-    const appFiles = excalidrawAPI.getFiles();
-    if (currentFileNode === null) {
-      // this is a new file save it as untitled
-    }
-    const content = JSON.stringify({
+    const { collaborators, ...previousAppState } = {
+      ...excalidrawAPI.getAppState(),
+    };
+    const content = {
       type: "excalidraw",
       version: 1,
       source: "https://excalidraw.com",
-      elements,
-      appState,
-      files: appFiles,
+      elements: excalidrawAPI.getSceneElements(),
+      appState: previousAppState,
+      files: excalidrawAPI.getFiles(),
+    };
+    if (currentFileNode?.id) {
+      return updateFileNodeMutation.mutateAsync({
+        fileId: currentFileNode.id,
+        updatedNode: currentFileNode,
+        content: JSON.stringify(content),
+      });
+    }
+    return createFileMutation.mutateAsync({
+      fileName: "Untitled",
+      content: JSON.stringify(content),
+      parentFolderId: "",
     });
-
-    console.log(content);
-    // if (!currentFileNode) {
-    //   return await createFileMutation.mutateAsync({
-    //     fileName: "Untitled",
-    //     content,
-    //   });
-    // }
-    // // Update the current file.
-    // const response = await updateFileAPI(currentFileNode.id, content);
-    // // Optionally update file tree if properties have changed.
-    // queryClient.invalidateQueries(["fileTree", auth!.user.id]);
-    // return response;
   };
 
   const createExcalidrawFile = async (
@@ -334,6 +367,16 @@ export const useFileHook = (excalidrawAPI: ExcalidrawImperativeAPI) => {
     });
   };
 
+  const moveFileNode = async (
+    sourceNodeId: string,
+    destinationContainerId: string,
+  ) => {
+    return moveFileMutatoin.mutateAsync({
+      sourceId: sourceNodeId,
+      destinationContainerId,
+    });
+  };
+
   return {
     fileTree: fileTreeResponse?.data?.file_tree ?? null,
     isFileTreeLoading,
@@ -348,6 +391,7 @@ export const useFileHook = (excalidrawAPI: ExcalidrawImperativeAPI) => {
     createExcalidrawFile,
     createFolder,
     updateFileNode,
+    moveFileNode,
   };
 };
 

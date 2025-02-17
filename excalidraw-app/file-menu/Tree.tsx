@@ -1,12 +1,13 @@
 import { Button } from "../../packages/excalidraw/components/Button";
 import {
+  cutIcon,
   EditFileIcon,
   FileIcon,
   FileOpenIcon,
   FolderClosedIcon,
   FolderIcon,
+  PasteFileIcon,
   SaveFileIcon,
-  searchIcon,
 } from "../../packages/excalidraw/components/icons";
 import { useAuthUser } from "./hooks/useAuth";
 import { type FileNode } from "./lib/file-tree-types";
@@ -18,14 +19,30 @@ import { useFileOptimized } from "./hooks/useFileOptimized";
 
 export default function Tree() {
   const { data } = useAuthUser();
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   const { fileTree } = useFileOptimized();
+  const [copyNode, setCopyNode] = useState<FileNode | null>(null);
 
+  const setCopyNodeHandler = (node: FileNode | null) => {
+    setCopyNode(node);
+  };
+
+  const { moveFileNode } = useFileOptimized();
+  // pastable only on folder nodes
+  const pasteNodeHandler = async (node: FileNode | null) => {
+    if (copyNode) {
+      if (!node?.id || node?.id === copyNode.id) {
+        return;
+      }
+      moveFileNode(copyNode.id, node.id);
+      setCopyNode(null);
+    }
+  };
   const { t } = useI18n();
   if (data && data.user) {
     return (
       <>
-        <div className="file-menu-search">
+        {/* <div className="file-menu-search">
           <TextField
             className="file-menu-search-input"
             value={searchQuery}
@@ -35,13 +52,19 @@ export default function Tree() {
               setSearchQuery(e);
             }}
           />
-        </div>
+        </div> */}
 
         <div className="file-menu-recent-container">
           <h1 className="file-menu-heading">{t("labels.fileMenu.recent")}</h1>
           <div className="file-menu-recent">
             {fileTree?.recent?.map((item, index) => (
-              <FileNodeTile key={index} node={item} depth={0} />
+              <FileNodeTile
+                key={index}
+                node={item}
+                depth={0}
+                onCopyNode={setCopyNodeHandler}
+                copyNode={copyNode}
+              />
             ))}
           </div>
         </div>
@@ -54,9 +77,25 @@ export default function Tree() {
         <div className="file-menu-tree-container">
           {fileTree?.children?.map((item, index) => {
             if (item.type === "folder") {
-              return <FolderNode node={item} key={index} />;
+              return (
+                <FolderNode
+                  node={item}
+                  key={index}
+                  copyNode={copyNode}
+                  onCopyNode={setCopyNodeHandler}
+                  onPasteNode={pasteNodeHandler}
+                />
+              );
             }
-            return <FileNodeTile node={item} key={index} depth={0} />;
+            return (
+              <FileNodeTile
+                node={item}
+                key={index}
+                depth={0}
+                copyNode={copyNode}
+                onCopyNode={setCopyNodeHandler}
+              />
+            );
           })}
         </div>
       </>
@@ -65,7 +104,19 @@ export default function Tree() {
   return <></>;
 }
 
-function FolderNode({ node, depth = 0 }: { node: FileNode; depth?: number }) {
+function FolderNode({
+  node,
+  depth = 0,
+  copyNode,
+  onCopyNode,
+  onPasteNode,
+}: {
+  node: FileNode;
+  depth?: number;
+  copyNode?: FileNode | null;
+  onCopyNode?: (node: FileNode | null) => void;
+  onPasteNode?: (node: FileNode | null) => void;
+}) {
   const [canShowCreateFolder, setCanShowCreateFolder] = useState(false);
   const [canEditFileName, setCanEditFileName] = useState(false);
   const [isFile, setIsFile] = useState(false);
@@ -145,6 +196,25 @@ function FolderNode({ node, depth = 0 }: { node: FileNode; depth?: number }) {
                     {EditFileIcon}
                   </Button>
                 )}
+                {copyNode === null ? (
+                  <Button
+                    className="file-menu-button"
+                    onSelect={() => {
+                      onCopyNode && onCopyNode(node);
+                    }}
+                  >
+                    {cutIcon}
+                  </Button>
+                ) : copyNode && copyNode.id === node.id ? null : (
+                  <Button
+                    className="file-menu-button"
+                    onSelect={() => {
+                      onPasteNode && onPasteNode(node);
+                    }}
+                  >
+                    {PasteFileIcon}
+                  </Button>
+                )}
               </div>
             )}
           </div>
@@ -172,11 +242,24 @@ function FolderNode({ node, depth = 0 }: { node: FileNode; depth?: number }) {
           {node.children?.map((child) => {
             if (child.type === "folder") {
               return (
-                <FolderNode key={child.id} node={child} depth={depth + 1} />
+                <FolderNode
+                  key={child.id}
+                  node={child}
+                  depth={depth + 1}
+                  copyNode={copyNode}
+                  onCopyNode={onCopyNode}
+                  onPasteNode={onPasteNode}
+                />
               );
             }
             return (
-              <FileNodeTile key={child.id} node={child} depth={depth + 1} />
+              <FileNodeTile
+                key={child.id}
+                node={child}
+                depth={depth + 1}
+                copyNode={copyNode}
+                onCopyNode={onCopyNode}
+              />
             );
           })}
         </div>
@@ -185,7 +268,17 @@ function FolderNode({ node, depth = 0 }: { node: FileNode; depth?: number }) {
   );
 }
 
-function FileNodeTile({ node, depth }: { node: FileNode; depth: number }) {
+function FileNodeTile({
+  node,
+  depth,
+  copyNode,
+  onCopyNode,
+}: {
+  node: FileNode;
+  depth: number;
+  copyNode?: FileNode | null;
+  onCopyNode?: (node: FileNode | null) => void;
+}) {
   const nameWithoutSuffix = node.name.endsWith(".excalidraw")
     ? node.name.slice(0, -11)
     : node.name;
@@ -234,6 +327,16 @@ function FileNodeTile({ node, depth }: { node: FileNode; depth: number }) {
             }}
           >
             {EditFileIcon}
+          </Button>
+        )}
+        {isHovered && copyNode === null && (
+          <Button
+            className="file-menu-button"
+            onSelect={() => {
+              onCopyNode && onCopyNode(node);
+            }}
+          >
+            {cutIcon}
           </Button>
         )}
       </div>

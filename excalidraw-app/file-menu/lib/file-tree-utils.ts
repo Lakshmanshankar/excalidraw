@@ -133,9 +133,16 @@ function getParentNodeIdHelper(
 
 export function removeNode(tree: FileTree, nodeId: string): boolean {
   if (tree.recent) {
-    const isNodeInRecent = tree.recent.every((node) => node.id === nodeId);
+    const isNodeInRecent = tree.recent.some((node) => node.id === nodeId);
     if (isNodeInRecent) {
       tree.recent = tree.recent.filter((node) => node.id !== nodeId);
+      return true;
+    }
+  }
+  // EDGE CASE: if the node is a root node, we need to remove it from the children array
+  for (const node of tree.children) {
+    if (nodeId === node.id) {
+      tree.children = tree.children.filter((child) => child.id !== nodeId);
       return true;
     }
   }
@@ -174,21 +181,21 @@ export function moveNode(
   tree: FileTree,
   sourceNodeId: string,
   destinationContainerId: string,
-): boolean {
+): FileTree {
   const sourceNode = findeNode(tree, sourceNodeId);
   if (!sourceNode) {
     console.error("Source node not found");
-    return false;
+    return tree;
   }
 
   const removed = removeNode(tree, sourceNodeId);
   if (!removed) {
     console.error("Failed to remove the node from its original location");
-    return false;
+    return tree;
   }
 
   addNode(tree, destinationContainerId, sourceNode);
-  return true;
+  return tree;
 }
 
 function findeNode(tree: FileTree, nodeId: string): FileNode | null {
