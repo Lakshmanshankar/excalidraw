@@ -1,9 +1,10 @@
 import { Button } from "../../packages/excalidraw/components/Button";
 import { SaveFileIcon } from "../../packages/excalidraw/components/icons";
+import Spinner from "../../packages/excalidraw/components/Spinner";
 import { useFileOptimized } from "./hooks/useFileOptimized";
 
 export default function SaveButton() {
-  const { saveCurrentFile } = useFileOptimized();
+  const { isSaving, saveCurrentFile } = useFileOptimized();
   return (
     <Button
       onSelect={() => {
@@ -11,7 +12,7 @@ export default function SaveButton() {
       }}
       className="file-menu-save-button"
     >
-      {SaveFileIcon}
+      {isSaving ? <Spinner /> : SaveFileIcon}
     </Button>
   );
 }

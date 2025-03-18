@@ -1,7 +1,18 @@
 import { v4 } from "uuid";
 import { type FileNode, type FileTree } from "./file-tree-types";
-import { addNode, moveNode, updateNode } from "./file-tree-utils";
-import { updateFileTree, uploadFileUsingSignedURL } from "./file-api";
+import {
+  addNode,
+  getAllFilesInFolder,
+  moveNode,
+  removeNode,
+  updateNode,
+} from "./file-tree-utils";
+import {
+  deleteBulkFiles,
+  deleteFile,
+  updateFileTree,
+  uploadFileUsingSignedURL,
+} from "./file-api";
 
 export const createFile = async (
   userId: string,
@@ -138,4 +149,67 @@ export const updateFileOrFolder = async (
   }
 
   return updateFileTreeNode();
+};
+
+export const deleteFileAPI = async (
+  userId: string,
+  fileId: string,
+  fileTree: FileTree,
+) => {
+  const res = await deleteFile(fileId);
+  if (res.error) {
+    return {
+      error: res.error,
+      message: res.message,
+      data: null,
+    };
+  }
+
+  const newFileTree = removeNode(fileTree, fileId);
+  const fileTreeRes = await updateFileTree(userId, newFileTree);
+  if (fileTreeRes.error) {
+    return {
+      error: fileTreeRes.error,
+      message: fileTreeRes.message,
+      data: fileTreeRes.data,
+    };
+  }
+  return {
+    error: null,
+    message: "File deleted successfully",
+    data: { fileTree: newFileTree },
+  };
+};
+
+export const deleteFolderAPI = async (
+  userId: string,
+  folderId: string,
+  fileTree: FileTree,
+) => {
+  const filePaths = getAllFilesInFolder(fileTree, folderId).map(
+    (file) => `${file.id}.excalidraw`,
+  );
+  const res = await deleteBulkFiles(filePaths);
+  if (res.error) {
+    return {
+      error: res.error,
+      message: res.message,
+      data: res.data,
+    };
+  }
+
+  const newFileTree = removeNode(fileTree, folderId);
+  const fTreeRes = await updateFileTree(userId, newFileTree);
+  if (fTreeRes.error) {
+    return {
+      error: fTreeRes.error,
+      message: fTreeRes.message,
+      data: fTreeRes.data,
+    };
+  }
+  return {
+    error: null,
+    message: "Folder deleted successfully",
+    data: { fileTree: newFileTree },
+  };
 };

@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import type { Request, Response } from 'express';
-import { createUploadSignedURL, getReadonlySignedURL } from '~/adapters/blob/supabase';
+import { createUploadSignedURL, deleteFile, getReadonlySignedURL } from '~/utils/supabase';
 import { db } from '~/config/db';
 import { objects } from '~/drizzle/schema';
 
@@ -34,6 +34,49 @@ export const createUserFile = async (req: Request, res: Response) => {
             error: 'Unauthorized',
             message: 'Make sure you have enough permissions to create a file',
         }).status(401);
+    }
+};
+
+export const deleteSingleFile = async (req: Request, res: Response) => {
+    const session = res.locals.session;
+    const filePath = `${session?.user?.id}/${(req.body?.path || '') as string}`;
+    if (session && session?.user && filePath && filePath.includes(session?.user?.id || '')) {
+        const userId = session?.user?.id as string;
+        const delRes = await deleteFile(filePath, userId);
+        res.status(200).json({ data: delRes });
+    } else {
+        res.json({
+            error: 'Unauthorized',
+            message: 'Make sure you have enough permissions to create a file',
+        }).status(401);
+    }
+};
+
+export const deleteMultipleFiles = async (req: Request, res: Response) => {
+    const session = res.locals.session;
+    const paths = Array.isArray(req.body?.paths) ? req.body.paths : [];
+    if (!session?.user?.id) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
+
+    if (!paths.length) {
+        res.status(400).json({ error: 'No file paths provided' });
+        return;
+    }
+    const userId = session.user.id;
+    const filePaths = paths.filter(Boolean).map((path: string) => `${userId}/${path}`);
+
+    try {
+        const delBulkRes = await Promise.all(
+            filePaths.map((path: string) => deleteFile(path, userId))
+        );
+        res.json({ success: true, deleted: delBulkRes });
+
+        return;
+    } catch (e) {
+        console.error('Error deleting files:', e);
+        res.status(500).json({ error: 'Failed to delete files' });
     }
 };
 

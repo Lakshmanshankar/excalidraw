@@ -15,13 +15,6 @@ pnpm drizzle:migrate
 
 # Storage
 
-This part is a little tricker because you have to create appropriate policies for supabase buckets.
-[basics](https://supabase.com/docs/guides/storage/buckets/fundamentals)
+Creating policies for supabase buckets is little tricker. you can learn some basics right [here](https://supabase.com/docs/guides/storage/buckets/fundamentals)
 
-You then create a private bucket and add the following policies so that a user can write
-
-
-# Policies
-
-1. The main idea is to keep every file private so that only a authenticated user can have access to that file. which require sending every response through our express as we have authentication right here.
-
+For all storage related operations we are using supabase signed urls. except for the remove file operation.

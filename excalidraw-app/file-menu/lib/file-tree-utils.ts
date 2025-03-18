@@ -131,31 +131,33 @@ function getParentNodeIdHelper(
   return null;
 }
 
-export function removeNode(tree: FileTree, nodeId: string): boolean {
+export function removeNode(tree: FileTree, nodeId: string): FileTree {
   if (tree.recent) {
     const isNodeInRecent = tree.recent.some((node) => node.id === nodeId);
     if (isNodeInRecent) {
       tree.recent = tree.recent.filter((node) => node.id !== nodeId);
-      return true;
+      return tree;
     }
   }
   // EDGE CASE: if the node is a root node, we need to remove it from the children array
   for (const node of tree.children) {
     if (nodeId === node.id) {
       tree.children = tree.children.filter((child) => child.id !== nodeId);
-      return true;
+      return tree;
     }
   }
   const parentFolderId = getParentNodeId(tree, nodeId);
   if (!parentFolderId) {
-    return false;
+    console.error("No parent folder found", tree);
+    return tree;
   }
   for (const node of tree.children) {
     if (removeNodeHelper(node, parentFolderId, nodeId)) {
-      return true;
+      return tree;
     }
   }
-  return false;
+  console.error("Node not found in parent folder", tree);
+  return tree;
 }
 
 function removeNodeHelper(
@@ -175,6 +177,37 @@ function removeNodeHelper(
     }
   }
   return false;
+}
+
+export function getAllFilesInFolder(tree: FileTree, folderId: string) {
+  const folderNode = findeNode(tree, folderId);
+  if (!folderNode) {
+    console.error("Folder node not found");
+    return [];
+  }
+  return getAllFileNodesHelper(folderNode);
+}
+
+// export function getAllFileNodes(tree: FileTree): FileNode[] {
+//   const fileNodes: FileNode[] = [];
+//   if (tree.recent) {
+//     fileNodes.push(...tree.recent);
+//   }
+//   for (const node of tree.children) {
+//     fileNodes.push(...getAllFileNodesHelper(node));
+//   }
+//   return fileNodes;
+// }
+
+function getAllFileNodesHelper(node: FileNode): FileNode[] {
+  const fileNodes: FileNode[] = [];
+  if (node.type === "file") {
+    fileNodes.push(node);
+  }
+  for (const childNode of node.children) {
+    fileNodes.push(...getAllFileNodesHelper(childNode));
+  }
+  return fileNodes;
 }
 
 export function moveNode(

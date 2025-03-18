@@ -1,4 +1,4 @@
-import { supabase, BUCKET } from '~/config/suapabse';
+import { supabase, BUCKET } from '~/config/supabase';
 
 // NOTE: supabase storage essentials
 // https://supabase.com/docs/guides/storage/buckets/fundamentals
@@ -50,16 +50,35 @@ export async function uploadFile(filePath: string, file: string) {
     return { data, error };
 }
 
-export const deleteFile = async (path: string) => {
-    const { data, error } = await supabase.storage.from(BUCKET.EXCLALIDRAW).remove([path]);
+export const deleteFile = async (path: string, folderId: string) => {
+    const folderPath = folderId;
+    const fileName = path.split('/').pop();
 
-    if (error) {
-        console.log(error, 'DELETING FILE IN ', path);
-        return error;
-    } else {
-        return data;
+    const { data: files, error: listError } = await supabase.storage
+        .from(BUCKET.EXCLALIDRAW)
+        .list(folderPath);
+
+    if (listError) {
+        console.error('Error checking file existence:', listError);
+        return listError;
     }
+    const fileExists = files?.some(file => file.name === fileName);
+    if (!fileExists) {
+        console.warn('File does not exist:', path);
+        return { error: 'File does not exist' };
+    }
+
+    console.log('Deleting file:', path);
+    const { data, error } = await supabase.storage.from(BUCKET.EXCLALIDRAW).remove([path]);
+    if (error) {
+        console.error('Error deleting file:', error);
+        return error;
+    }
+    console.log('File deleted successfully:', data);
+    return data;
 };
+
+
 
 export async function createFolder(folderName: string) {
     const { data, error } = await supabase.storage

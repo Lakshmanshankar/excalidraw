@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { db } from '~/config/db';
 import { objects, users, type InsertUser, type SelectUser } from '~/drizzle/schema';
 import { eq } from 'drizzle-orm';
-import { createFolder } from '~/adapters/blob/supabase';
+import { createFolder } from '~/utils/supabase';
 
 export const getUserByEmail = async (req: Request, res: Response) => {
     const { email } = req.body;

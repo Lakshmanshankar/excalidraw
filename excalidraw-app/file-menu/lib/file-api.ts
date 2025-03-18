@@ -160,3 +160,47 @@ export const uploadFileUsingSignedURL = async ({
     throw error;
   }
 };
+
+export const deleteFile = async (fileId: string) => {
+  const res = await fetch(`${SERVER_URL}/api/v1/file/delete`, {
+    credentials: "include",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      path: `${fileId}.excalidraw`,
+    }),
+  });
+  if (!res.ok) {
+    return {
+      error: "Failed to delete file",
+      message: "Failed to delete file",
+    };
+  }
+  return {
+    error: null,
+    message: "File deleted successfully",
+    data: res.json(),
+  };
+};
+
+export const deleteBulkFiles = async (fileIds: string[]) => {
+  const res = await fetch(`${SERVER_URL}/api/v1/file/delete_bulk`, {
+    credentials: "include",
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      paths: fileIds,
+    }),
+  });
+  if (!res.ok) {
+    return {
+      error: "Failed to delete files",
+      message: "Failed to delete files",
+    };
+  }
+  return {
+    error: null,
+    message: "Files deleted successfully",
+    data: res.json(),
+  };
+};

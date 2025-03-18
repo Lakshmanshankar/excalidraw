@@ -8,6 +8,7 @@ import {
   FolderIcon,
   PasteFileIcon,
   SaveFileIcon,
+  TrashIcon,
 } from "../../packages/excalidraw/components/icons";
 import { useAuthUser } from "./hooks/useAuth";
 import { type FileNode } from "./lib/file-tree-types";
@@ -125,6 +126,8 @@ function FolderNode({
   const isRootNode = node.id === "" && node.name === "root";
   const { t } = useI18n();
 
+  const { deleteFolder } = useFileOptimized();
+
   if (node.type !== "folder") {
     return null;
   }
@@ -172,7 +175,10 @@ function FolderNode({
               <div style={{ display: "flex", gap: "5px" }}>
                 <Button
                   className="file-menu-button"
-                  onSelect={() => setCanShowCreateFolder((prev) => !prev)}
+                  onSelect={() => {
+                    setCanShowCreateFolder((prev) => !prev);
+                    setIsFile(false);
+                  }}
                 >
                   {FolderIcon}
                 </Button>
@@ -180,10 +186,18 @@ function FolderNode({
                   className="file-menu-button"
                   onSelect={() => {
                     setCanShowCreateFolder((prev) => !prev);
-                    setIsFile((prev) => !prev);
+                    setIsFile((prev) => true);
                   }}
                 >
                   {FileIcon}
+                </Button>
+                <Button
+                  className="file-menu-button"
+                  onSelect={() => {
+                    deleteFolder(node.id);
+                  }}
+                >
+                  {TrashIcon}
                 </Button>
 
                 {!isRootNode && (
@@ -288,6 +302,7 @@ function FileNodeTile({
     loadFile: getCurrentFile,
     isCurrentNodeFetching: isFileFetching,
     currentFileNode,
+    deleteFileNode,
   } = useFileOptimized();
 
   const exitFileEdit = () => {
@@ -320,14 +335,25 @@ function FileNodeTile({
           {nameWithoutSuffix}
         </button>
         {isHovered && (
-          <Button
-            className="file-menu-button"
-            onSelect={() => {
-              setCanEditFileName((prev) => !prev);
-            }}
-          >
-            {EditFileIcon}
-          </Button>
+          <>
+            <Button
+              className="file-menu-button"
+              onSelect={() => {
+                setCanEditFileName((prev) => !prev);
+              }}
+            >
+              {EditFileIcon}
+            </Button>
+
+            <Button
+              className="file-menu-button"
+              onSelect={() => {
+                deleteFileNode(node.id);
+              }}
+            >
+              {TrashIcon}
+            </Button>
+          </>
         )}
         {isHovered && copyNode === null && (
           <Button
@@ -359,6 +385,7 @@ function UpdateFileNode({
 }) {
   const [folderName, setFolderName] = useState(fileNode.name);
   const { updateFileNode } = useFileOptimized();
+  const type = fileNode.type === "folder" ? "Folder" : "File";
   return (
     <div
       style={{
@@ -372,7 +399,7 @@ function UpdateFileNode({
         className="file-menu-search-input"
         value={folderName}
         icon={FolderIcon}
-        placeholder="Enter Folder name"
+        placeholder={`Enter ${type} name`}
         onChange={(e) => {
           setFolderName(e);
         }}
@@ -402,6 +429,7 @@ function CreateFolderInput({
 }) {
   const [folderName, setFolderName] = useState("");
   const { createFolder, createExcalidrawFile } = useFileOptimized();
+  const type = isFile ? "File" : "Folder";
   return (
     <div
       style={{
@@ -415,7 +443,7 @@ function CreateFolderInput({
         className="file-menu-search-input"
         value={folderName}
         icon={FolderIcon}
-        placeholder="Enter Folder name"
+        placeholder={`Enter ${type} name`}
         onChange={(e) => {
           setFolderName(e);
         }}

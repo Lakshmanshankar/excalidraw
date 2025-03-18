@@ -47,6 +47,9 @@
     border: none;
     border-radius: 5px;
     user-select: text;
+    max-width: 100px;
+    text-overflow: ellipsis;
+    align-items: center;
   }
   .create-folder-container{
     min-height: 30px;
